@@ -78,19 +78,32 @@ const Specialization_List = [
     { specialization_Name: 'General Surgery' }
 ]
 
-let ScheduleParams = {
+let ScheduleParams = [{
     date: "2023-01-22",
-    start_time: "07:00:00",
-    end_time: "12:00:00",
+    start_time: "02:00:00",
+    end_time: "06:00:00",
     total_patient: 4
-}
+}, {
+    date: "2023-01-23",
+    start_time: "01:00:00",
+    end_time: "04:00:00",
+    total_patient: 15
+}, {
+    date: "2023-01-25",
+    start_time: "09:00:00",
+    end_time: "01:00:00",
+    total_patient: 10
+}]
 
 exports.insert = async(req, res) => {
-    insert.insertHmoList(HMO_List)
-    insert.insertSpecializationList(Specialization_List)
-    for (let i = 0; i < 4; i++) {
-        insert.InsertDoctor(DoctorParams[i])
-    }
+    // insert.insertHmoList(HMO_List)
+    // insert.insertSpecializationList(Specialization_List)
+    // for (let i = 0; i < 4; i++) {
+    //     insert.InsertDoctor(DoctorParams[i])
+    // }
+    insert.InsertSchedule('MCM-29b0111a-d4ba-46da-93fe-6092ccd03928', ScheduleParams[0])
+    insert.InsertSchedule('MCM-49d8d4fa-4daf-4aae-a6c0-634273c6a3eb', ScheduleParams[1])
+    insert.InsertSchedule('MCM-64b28d1e-19a8-415e-a5f4-6964a3965a35', ScheduleParams[2])
     res.end()
 }
 
