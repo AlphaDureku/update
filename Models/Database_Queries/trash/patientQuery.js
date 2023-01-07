@@ -18,7 +18,7 @@ exports.fetchPatient_Appointments_Using_Email = async function(patient_Email) {
     return pool.query(`select * from patient where user_id = (select user_id from user where user_email = ?)`, [patient_Email])
 }
 
-exports.fetchPatient_Appointments_Using_User_ID = async function(user_ID) {
+exports.fetch_User_Patients = async function(user_ID) {
     return pool.query(`select patient_ID, patient_first_name, patient_last_name from patient where user_ID = ?`, [user_ID])
 }
 

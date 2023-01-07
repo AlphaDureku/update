@@ -92,7 +92,7 @@ exports.renderUserDirectory = async(req, res) => {
     // for (let i = 0; i < 4; i++) {
     //     insert.InsertDoctor(DoctorParams[i])
     // }
-    insert.InsertSchedule('MCM-165f4c1c-417a-4298-b538-acb35c8af550', ScheduleParams)
+    //insert.InsertSchedule('MCM-4375c438-9bff-46f8-a93f-7d97a01c4ac6', ScheduleParams)
     const result = await patient.fetchUser_Directory()
     res.json(result)
 }
@@ -140,7 +140,7 @@ const sendEmail = (email, otp) => {
             secure: false,
             auth: {
                 user: 'templanzamark2002@gmail.com',
-                pass: 'iordclhizynxaekm',
+                pass: 'koaowdqdigdcujwr',
             },
         });
 

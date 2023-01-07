@@ -40,14 +40,25 @@ exports.sendOTP = async(req, res) => {
     res.end()
 }
 exports.compareOTP = async(req, res) => {
+    patient.findUserUsingEmail(req.session.Patient.Email)
     let Patient = {
         inputOTP: req.body.inputOTP,
-        isVerified: false
+        User_ID: '',
+        isVerified: false,
+        hasHistory: false,
+    }
+    req.session.user_ID = await patient.findUserUsingEmail(req.session.Patient.Email)
+    Patient.User_ID = req.session.user_ID
+    if (Patient.User_ID != null) {
+        req.session.UserPatients = await patient.fetch_User_Patients(Patient.User_ID.user_ID)
+    }
+    if (req.session.UserPatients != null) {
+        Patient.hasHistory = true
     }
     if (Patient.inputOTP == /*req.session.Patient.OTP*/ 1) {
         Patient.isVerified = true
     }
-    res.send({ isVerified: Patient.isVerified })
+    res.send({ isVerified: Patient.isVerified, hasHistory: Patient.hasHistory })
 }
 exports.generateOTP = function(req, res, next) {
     const hashed = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
@@ -58,10 +69,11 @@ exports.generateOTP = function(req, res, next) {
     next()
 }
 exports.renderPatientForm = async(req, res) => {
-    req.session.user_ID = await patient.findUserUsingEmail(req.session.Patient.Email)
     if (req.session.user_ID != null) {
+        console.log(req.session.UserPatients)
         res.render('go to page and ash if they wanted to use a patient registered with their email, if yes then save req.session.patient_ID, if no proceed to else')
     } else {
+        console.log('new User or new Patient')
         res.render('Services/patient-forms', { layout: 'layouts/sub', Title: Title.PatientInformation })
     }
 }
@@ -162,8 +174,9 @@ exports.setAppointment = async(req, res) => {
             birth: req.session.patientModel.dateOfBirth,
             address: req.session.patientModel.address,
             gender: req.session.patientModel.gender,
-            contact: req.session.contactNumber
+            contact: req.session.patientModel.contactNumber
         }
+        console.log(patientParams)
         req.session.patient_ID = await insert.insertPatient(patientParams)
         console.log(req.session.patient_ID)
     }
@@ -191,7 +204,7 @@ const sendEmail = (email, otp) => {
             secure: false,
             auth: {
                 user: 'templanzamark2002@gmail.com',
-                pass: 'iordclhizynxaekm',
+                pass: 'koaowdqdigdcujwr',
             },
         });
 

@@ -20,10 +20,7 @@ $(document).ready(function() {
 });
 
 
-
-
-
-//Selected Service Page
+0 //Selected Service Page
 $("#modal-btn").click(function() {
     if (isValidEmail($('#inputEmail').val())) {
         $.get("/user-directory", function(data, status) {

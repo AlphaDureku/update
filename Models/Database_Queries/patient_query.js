@@ -41,7 +41,7 @@ exports.fetchPatient_Appointments_Using_Email = async function(patient_Email) {
     })
 }
 
-exports.fetchPatient_Appointments_Using_User_ID = async function(user_ID) {
+exports.fetch_User_Patients = async function(user_ID) {
     return await model.patient.findAll({
         raw: true,
         attributes: [
@@ -72,20 +72,17 @@ exports.fetchPatient_Appointments_Using_Patient_ID = async function(patient_ID) 
             [Sequelize.col('user_email'), 'email'],
             [Sequelize.col('appointmentdetails.doctor_ID'), 'doctor_ID'],
             [Sequelize.col('doctor_first_name'), 'doctor_Fname'],
+            [Sequelize.col('specialization_Name'), 'specialization'],
             [Sequelize.col('doctor_last_name'), 'doctor_Lname'],
-            [Sequelize.col('doctor_specialization'), 'specialization'],
             [Sequelize.col('appointment_type'), 'type'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.col('doctor_schedule_start_time'), 'start'],
             [Sequelize.col('doctor_schedule_end_time'), 'end'],
             [Sequelize.col('appointment_status'), 'status'],
-
-
         ],
         include: [{
                 model: model.user,
                 attributes: [],
-                required: true
             },
 
             {
@@ -95,15 +92,18 @@ exports.fetchPatient_Appointments_Using_Patient_ID = async function(patient_ID) 
                 include: [{
                         model: model.doctor,
                         attributes: [],
-                        required: true
+                        required: true,
+                        include: [{
+                            model: model.doctor_specialization
+                        }]
                     },
                     {
                         model: model.doctor_schedule_table,
                         attributes: [],
                         required: false
-                    }
+                    },
                 ]
-            },
+            }
         ],
         where: {
             patient_ID: patient_ID
