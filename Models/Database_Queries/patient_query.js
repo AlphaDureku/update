@@ -79,7 +79,7 @@ exports.fetchPatient_Appointments_Using_Patient_ID = async function(patient_ID) 
             'patient_last_name', ['patient_gender', 'gender'],
             [age, 'patient_age'],
             [Sequelize.col('user_email'), 'email'],
-            [Sequelize.col('appointmentdetails.doctor_ID'), 'doctor_ID'],
+            [Sequelize.col('appointmentDetails.doctor_ID'), 'doctor_ID'],
             [Sequelize.col('doctor_first_name'), 'doctor_Fname'],
             [Sequelize.col('specialization_Name'), 'specialization'],
             [Sequelize.col('doctor_last_name'), 'doctor_Lname'],
