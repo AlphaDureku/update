@@ -87,8 +87,18 @@ const CompareOTPsetAppointment = (inputOTP) => {
         credentials: 'same-origin',
         inputOTP: inputOTP,
     }, function(res, status) {
-        console.log(res.isVerified)
-        if (res.isVerified) {
+        if (res.isVerified && res.hasHistory) {
+            Patient = res.patientList
+            Patient.forEach(data => {
+                $('#patient_row').prepend(`
+                <div class="form-check  center mt-3 ">
+                <input type="radio" id="bookingchoice1" value="${data.patient_ID}" name="choice" />
+                <label class="btn formyself center" for="bookingchoice1">${data.patient_first_name} ${data.patient_last_name}</label>
+            </div>`)
+            })
+            $("#otpmodal").modal("hide");
+            $('#patientRecordModel').modal('show');
+        } else if (res.isVerified) {
             $(location).attr('href', `/book-appointment/patient-forms`);
         } else {
             $('#otpError').css({ 'display': 'block' })
@@ -137,6 +147,7 @@ $("#finish").click(function() {
     $.post("/book-appointment/set-appointment", {
         doctor_schedule_id: $('#drop-down').val()
     }, function(data, status) {
-
+        $(location).attr('href', `/book-appointment/Finish`)
     })
+
 });

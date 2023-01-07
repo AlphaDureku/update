@@ -85,6 +85,16 @@ let ScheduleParams = {
     total_patient: 4
 }
 
+exports.insert = async(req, res) => {
+    insert.insertHmoList(HMO_List)
+    insert.insertSpecializationList(Specialization_List)
+    for (let i = 0; i < 4; i++) {
+        insert.InsertDoctor(DoctorParams[i])
+    }
+    res.end()
+}
+
+
 //Check appointment section
 exports.renderUserDirectory = async(req, res) => {
     // insert.insertHmoList(HMO_List)
@@ -92,7 +102,8 @@ exports.renderUserDirectory = async(req, res) => {
     // for (let i = 0; i < 4; i++) {
     //     insert.InsertDoctor(DoctorParams[i])
     // }
-    //insert.InsertSchedule('MCM-4375c438-9bff-46f8-a93f-7d97a01c4ac6', ScheduleParams)
+    //insert.InsertSchedule('MCM-1edede78-4900-43e0-969c-b0424971f5df', ScheduleParams)
+    //insert.insert_user('templanzamark2002@gmail.com')
     const result = await patient.fetchUser_Directory()
     res.json(result)
 }
@@ -116,10 +127,9 @@ exports.fetchPatient_OTP = async(req, res) => {
         user_ID: null,
         isVerified: false
     }
-    console.log(req.body.inputEmail)
     const result = await verification.fetchPatient_OTP(user.Email)
+    console.log(result)
     result.forEach(data => {
-
         if (data.user_OTP == req.body.inputOTP) {
             user.isVerified = true
             user.user_ID = data.user_ID
@@ -155,11 +165,4 @@ const sendEmail = (email, otp) => {
     }
 
     main().catch(console.error);
-}
-
-
-exports.testInsertPatient = async(req, res) => {
-    patientModel.insertPatient("Kevin Carbera", "Deep", "templanzamark2002@gmail.com", "9653876383", "111 Juan Luna St.", "20", "Male")
-    patientModel.insertPatient("Joji", "SuckerVerg", "templanzamark2003@gmail.com", "9653876383", "111 Juan Luna St.", "25", "Male")
-    res.send("success")
 }

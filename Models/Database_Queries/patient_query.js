@@ -19,15 +19,6 @@ exports.findUserUsingEmail = async function(email) {
         where: { user_email: email }
     })
 }
-exports.findPatientUsingCredentials = async function(name, lastName) {
-    return await model.patient.findOne({
-        raw: true,
-        attributes: [
-            'patient_ID'
-        ],
-        where: { patient_first_name: name, patient_last_name: lastName }
-    })
-}
 
 exports.fetchPatient_Appointments_Using_Email = async function(patient_Email) {
     return await model.patient.findAll({
@@ -47,11 +38,29 @@ exports.fetch_User_Patients = async function(user_ID) {
         attributes: [
             'patient_ID',
             'patient_first_name',
-            'patient_last_name'
+            'patient_last_name',
+            'patient_gender', [Sequelize.fn('COUNT', Sequelize.col('patient_ID')), 'count'],
         ],
+        include: [{
+            model: model.user,
+            attributes: []
+        }],
         where: {
             user_ID: user_ID
         }
+    })
+}
+
+exports.fetch_Patient_Email_Using_Patient_ID = async function(patient_ID) {
+    return await model.patient.findOne({
+        raw: true,
+        attributes: [
+            'patient_gender', [Sequelize.col('user_email'), 'email'],
+        ],
+        include: [{
+            model: model.user,
+            attributes: []
+        }]
     })
 }
 
@@ -108,6 +117,55 @@ exports.fetchPatient_Appointments_Using_Patient_ID = async function(patient_ID) 
         where: {
             patient_ID: patient_ID
         }
+    })
+}
+
+exports.getappointmentDetails = async function(appointment_ID) {
+    const age = Sequelize.fn(
+        'TIMESTAMPDIFF',
+        Sequelize.literal('YEAR'),
+        Sequelize.literal('patient_dateOfBirth'),
+        Sequelize.fn('NOW')
+    );
+    return await model.appointmentDetails.findOne({
+        raw: true,
+        attributes: [
+            [Sequelize.col('patient_first_name'), 'patient_first_name'],
+            [Sequelize.col('patient_last_name'), 'patient_last_name'],
+            [Sequelize.col('patient_gender'), 'gender'],
+            [age, 'patient_age'],
+            [Sequelize.col('user_Email'), 'email'],
+            [Sequelize.col('doctor_first_name'), 'doctor_first_name'],
+            [Sequelize.col('doctor_first_name'), 'doctor_last_name'],
+            [Sequelize.col('specialization_name'), 'specialization'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%l:%i %p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%l:%i %p'), 'end'],
+
+        ],
+        include: [{
+            model: model.patient,
+            attributes: [],
+            include: [{
+                model: model.user,
+                attributes: []
+            }]
+        }, {
+            model: model.doctor,
+            attributes: [],
+            include: [{
+                model: model.doctor_specialization,
+                attributes: []
+            }]
+        }, {
+            model: model.doctor_schedule_table,
+            attributes: []
+        }],
+
+        where: {
+            appointment_ID: appointment_ID
+        }
+
     })
 }
 

@@ -46,6 +46,7 @@ exports.compareOTP = async(req, res) => {
         User_ID: '',
         isVerified: false,
         hasHistory: false,
+        patientList: {}
     }
     req.session.user_ID = await patient.findUserUsingEmail(req.session.Patient.Email)
     Patient.User_ID = req.session.user_ID
@@ -53,12 +54,13 @@ exports.compareOTP = async(req, res) => {
         req.session.UserPatients = await patient.fetch_User_Patients(Patient.User_ID.user_ID)
     }
     if (req.session.UserPatients != null) {
+        Patient.patientList = req.session.UserPatients
         Patient.hasHistory = true
     }
-    if (Patient.inputOTP == /*req.session.Patient.OTP*/ 1) {
+    if (Patient.inputOTP == req.session.Patient.OTP) {
         Patient.isVerified = true
     }
-    res.send({ isVerified: Patient.isVerified, hasHistory: Patient.hasHistory })
+    res.send(Patient)
 }
 exports.generateOTP = function(req, res, next) {
     const hashed = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
@@ -68,6 +70,15 @@ exports.generateOTP = function(req, res, next) {
     }
     next()
 }
+
+exports.userExists = async(req, res) => {
+    req.session.patient_ID = req.body.choice
+    if (req.session.patientID != '') {
+        res.redirect('choose-doctor')
+    }
+    res.render('Services/patient-forms', { layout: 'layouts/sub', Title: Title.PatientInformation })
+}
+
 exports.renderPatientForm = async(req, res) => {
     if (req.session.user_ID != null) {
         console.log(req.session.UserPatients)
@@ -161,11 +172,11 @@ exports.getReceipt = async(req, res) => {
 
 exports.setAppointment = async(req, res) => {
     const queue_number = await doctor.getQueueInstance(req.body.doctor_schedule_id)
-
     if (req.session.user_ID == null) {
         req.session.user_ID = await insert.insert_user(req.session.Patient.Email)
     }
-    if (req.session.patient_ID == null) {
+
+    if (req.session.patient_ID == undefined) {
         patientParams = {
             user_ID: req.session.user_ID,
             Fname: req.session.patientModel.Fname,
@@ -187,13 +198,17 @@ exports.setAppointment = async(req, res) => {
         queue: queue_number,
         type: req.session.patientModel.appointmentType
     }
-
-    insert.insertAppointmentDetails(appointmentParams)
+    req.session.appointment_ID = await insert.insertAppointmentDetails(appointmentParams)
     doctor.incrementQueue(appointmentParams.doctorSchedule_ID)
-
-    res.redirect('/')
+    res.end()
 }
 
+
+exports.FinalStep = async(req, res) => {
+    const result = await patient.getappointmentDetails(req.session.appointment_ID)
+    console.log(result)
+    res.render('Services/Last-step', { final: result, layout: 'layouts/sub', Title: 'Finishing' })
+}
 
 // Send Email Process
 const sendEmail = (email, otp) => {
@@ -207,7 +222,6 @@ const sendEmail = (email, otp) => {
                 pass: 'koaowdqdigdcujwr',
             },
         });
-
         let info = await transporter.sendMail({
             from: '"templanzamark2002@gmail.com', // sender address
             to: email, // list of receivers
@@ -216,7 +230,6 @@ const sendEmail = (email, otp) => {
         });
         console.log("Message sent: %s", info.messageId);
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
     }
 
     main().catch(console.error);

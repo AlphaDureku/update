@@ -14,6 +14,7 @@ exports.getOneDoctor = async function(doctor_ID) {
     return await model.doctor.findAll({
         raw: true,
         attributes: [
+
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%Y-%m-%d'), 'date2'],
             [Sequelize.col('doctor_schedule_start_time'), 'start'],
@@ -54,6 +55,21 @@ exports.getOneDoctor2 = async function(doctor_ID) {
         }],
         where: { doctor_ID: doctor_ID }
     })
+}
+
+exports.getDoctorUsing_ID = async function(doctor_ID) {
+    return await model.doctor.findByPk(doctor_ID, {
+        raw: true,
+        attributes: [
+            'doctor_first_name',
+            'doctor_last_name', [Sequelize.col('specialization_Name'), 'specialization']
+        ],
+        include: [{
+            model: model.doctor_specialization
+        }]
+
+    })
+
 }
 
 exports.getDoctor = async function() {

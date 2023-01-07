@@ -23,8 +23,6 @@ exports.insert_user = async function(email) {
 }
 
 
-
-
 exports.insertPatient = async function(patientParams) {
     const patientModel = {
         patient_ID: 'PATIENT-' + uuid.v4(),
@@ -101,6 +99,8 @@ exports.insertAppointmentDetails = async function(params) {
         appointment_type: params.type,
     }
     await model.appointmentDetails.create(appointmentdetailsModel)
+    return appointmentdetailsModel.appointment_ID
+
 }
 
 

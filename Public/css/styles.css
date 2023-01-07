@@ -591,3 +591,73 @@ a:hover {
     width: 931px;
     height: 150px;
 }
+
+.optionstag {
+    flex: content;
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 43px;
+    text-align: center;
+    color: #000000;
+}
+
+.formyself {
+    background: #ECECEC;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    width: 360px;
+    height: 50px;
+}
+
+.forothers {
+    background: #ECECEC;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    width: 360px;
+    height: 50px;
+}
+
+.formyself:hover {
+    background: #ECECEC;
+    border: 1px solid #000000;
+}
+
+.forothers:hover {
+    background: rgba(202, 255, 207, 0.5);
+    border: 1px solid #2F9D44;
+    color: #388440;
+}
+
+.formyself:hover {
+    background: rgba(202, 255, 207, 0.5);
+    border: 1px solid #2F9D44;
+    color: #388440;
+}
+
+#bookingchoice2:checked+label {
+    width: 380px;
+    height: 60px;
+    background: rgba(202, 255, 207, 0.5);
+    border: 1px solid #2F9D44;
+    color: #388440;
+    font-weight: 600
+}
+
+#bookingchoice2 {
+    display: none;
+}
+
+#bookingchoice1:checked+label {
+    width: 380px;
+    height: 60px;
+    background: rgba(202, 255, 207, 0.5);
+    border: 1px solid #2F9D44;
+    color: #388440;
+    font-weight: 600
+}
+
+#bookingchoice1 {
+    display: none;
+}

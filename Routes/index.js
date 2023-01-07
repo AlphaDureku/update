@@ -20,8 +20,6 @@ router.post('/send-OTP', trackAppointmentController.sendEmailOtp)
 
 router.post('/verify', trackAppointmentController.fetchPatient_OTP)
 
-router.post('/testInsertPatient', trackAppointmentController.testInsertPatient)
-
-
+router.post('/insert', trackAppointmentController.insert)
 
 module.exports = router;

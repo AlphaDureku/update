@@ -13,3 +13,9 @@ exports.fetchPatient_Appointments_Using_Patient_ID = async(req, res) => {
     console.log(result)
     res.render('Patient/Appointments', { queriedAppointments: result, layout: 'layouts/sub', Title: Title.MyAppointments })
 }
+
+exports.editPatientInfo_Using_Patient_ID = async(req, res) => {
+    const result = await patient.fetch_Patient_Email_Using_Patient_ID(req.params.id)
+
+    res.render('Patient/Edit-Info', { result: result, layout: 'layouts/sub', Title: 'Edit Patient Information' })
+}

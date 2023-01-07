@@ -40,6 +40,39 @@
                     <button type="button " class="btn btn-success btn " id="sendOTP" style="width: 110px;">Proceed</button>
                     <div class="empty"></div>
 
+                    <div class="modal fade optionsmodal" id="patientRecordModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered ">
+
+                            <div class="modal-content ">
+
+                                <div class="modal-header ">
+                                    <div class="modal-title optionstag" id="exampleModalLabel">Options</div>
+                                </div>
+
+                                <div class="modal-body">
+                                    <p style="font-weight: 400; font-size: 17px; color: #000000;" class="ms-2 me-2">
+                                        We discovered a record associated to the email address you provided. Please indicate whose reservation is this for.</p>
+                                    <div class="row  ">
+                                        <div class="form-check  center mt-3 ">
+                                            <input type="radio" id="bookingchoice1" value="option1" name="choice" />
+                                            <label class="btn formyself center" for="bookingchoice1">Mark Angelo Templanza</label>
+                                        </div>
+
+
+                                        <div class="form-check  center mt-4 mb-2  ">
+                                            <input type="radio" id="bookingchoice2" value="option2" name="choice" />
+                                            <label class="btn forothers center" for="bookingchoice2">Booking for others</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button " class="btn btn-success btn me-3 " style="width: 110px; background-color: #FF0000; border-color: #FF0000;">Back</button>
+                                    <button type="button " class="btn btn-success btn " data-bs-toggle="modal" data-bs-target="" style="width: 110px;">Proceed</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal fade modal" id="otpmodal" tabindex="-1" aria-labelledby="modlabel" aria-hidden="true" data-bs-backdrop="static">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
