@@ -3,7 +3,7 @@ $('.datepicker-here').datepicker({
     inline: true
 })
 
-$.get("http://localhost:3000/book-appointment/get-schedule", function(data, status) {
+$.get("/book-appointment/get-schedule", function(data, status) {
     let enabledDays = []
     data.forEach(res => {
         enabledDays.push(res.date2)
@@ -17,7 +17,7 @@ const renderCalendar = (enabledDays) => {
     $('.datepicker-here').datepicker({
         dateFormat: 'yyyy/mm/dd',
         onSelect() {
-            $.get("http://localhost:3000/book-appointment/get-schedule2", function(data, status) {
+            $.get("/book-appointment/get-schedule2", function(data, status) {
                 $('#table').empty().not(':first').remove();
                 $('#patientQueue').remove()
                 $('#drop-down').children().not(':first').remove();

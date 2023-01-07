@@ -7,12 +7,12 @@ function isValidEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 $(document).ready(function() {
-    $.get('http://localhost:3000/setup-HMO', function(data) {
+    $.get('/setup-HMO', function(data) {
         data.forEach(result => {
             $('#HMO_Query').append(`<option value="${result.HMO_ID}">${result.HMO_Name}</option>`)
         })
     })
-    $.get('http://localhost:3000/setup-specialization', function(data) {
+    $.get('/setup-specialization', function(data) {
         data.forEach(result => {
             $('#specialization_Query').append(`<option value=${result.specialization_ID}>${result.specialization_Name}</option>`)
         })
@@ -26,7 +26,7 @@ $(document).ready(function() {
 //Selected Service Page
 $("#modal-btn").click(function() {
     if (isValidEmail($('#inputEmail').val())) {
-        $.get("http://localhost:3000/user-directory", function(data, status) {
+        $.get("/user-directory", function(data, status) {
             let exist = false;
             data.forEach(result => {
                 if ($('#inputEmail').val() == result.user_email) {
@@ -34,7 +34,7 @@ $("#modal-btn").click(function() {
                 }
             })
             if (exist) {
-                $.post("http://localhost:3000/send-OTP", {
+                $.post("/send-OTP", {
                     patient_Email: $('#inputEmail').val()
                 }, function(res, status) {
                     console.log(res)
@@ -54,13 +54,13 @@ $("#modal-btn").click(function() {
 });
 
 const trackingCompareOTP = (inputOTP, inputEmail) => {
-    $.post("http://localhost:3000/verify", {
+    $.post("/verify", {
         inputOTP: inputOTP,
         inputEmail: inputEmail
     }, function(res, status) {
         console.log(res.isVerified)
         if (res.isVerified) {
-            $(location).attr('href', `http://localhost:3000/Manage-Appointments/${res.user_ID}`);
+            $(location).attr('href', `/Manage-Appointments/${res.user_ID}`);
         } else {
             $('#otpError').css({ 'display': 'block' })
         }
@@ -70,7 +70,7 @@ const trackingCompareOTP = (inputOTP, inputEmail) => {
 $("#sendOTP").click(function() {
     if ($("#inputEmail").val() != "" && isValidEmail($('#inputEmail').val())) {
         if ($('#checkbox').is(":checked")) {
-            $.post("http://localhost:3000/book-appointment/send-OTP", {
+            $.post("/book-appointment/send-OTP", {
                 credentials: 'same-origin',
                 patient_Email: $('#inputEmail').val()
             })
@@ -86,13 +86,13 @@ $("#sendOTP").click(function() {
 
 })
 const CompareOTPsetAppointment = (inputOTP) => {
-    $.post("http://localhost:3000/book-appointment/verify-otp", {
+    $.post("/book-appointment/verify-otp", {
         credentials: 'same-origin',
         inputOTP: inputOTP,
     }, function(res, status) {
         console.log(res.isVerified)
         if (res.isVerified) {
-            $(location).attr('href', `http://localhost:3000/book-appointment/patient-forms`);
+            $(location).attr('href', `/book-appointment/patient-forms`);
         } else {
             $('#otpError').css({ 'display': 'block' })
         }
@@ -120,7 +120,7 @@ $(document).ready(function() {
 
         if ($('#drop-down').val() !== "") {
             $("#modal").modal("show");
-            $.get("http://localhost:3000/book-appointment/get-receipt", {
+            $.get("/book-appointment/get-receipt", {
                     doctor_schedule_ID: $('#drop-down').val()
                 },
                 function(data) {
@@ -137,7 +137,7 @@ $(document).ready(function() {
 
 
 $("#finish").click(function() {
-    $.post("http://localhost:3000/book-appointment/set-appointment", {
+    $.post("/book-appointment/set-appointment", {
         doctor_schedule_id: $('#drop-down').val()
     }, function(data, status) {
 
