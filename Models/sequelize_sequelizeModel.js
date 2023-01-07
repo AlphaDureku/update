@@ -226,7 +226,7 @@ const Doctor_schedule_table = sequelize.define('doctor_schedule_table', {
 
 //Table controller
 async function syncAll() {
-    await sequelize.sync({ force: true }).then(() => {
+    await sequelize.sync({ alter: true }).then(() => {
         console.log("success")
     })
 }
@@ -280,7 +280,7 @@ async function setDoctor_Department(doctorModel) {
 }
 setDoctor_Department(doctorModel)
 */
-syncAll()
+
 
 
 module.exports = sequelize.models

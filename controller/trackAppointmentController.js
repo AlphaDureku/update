@@ -86,7 +86,11 @@ let ScheduleParams = {
 }
 
 exports.insert = async(req, res) => {
-    insert.InsertSchedule('MCM-0ae6d62f-a30d-47de-ba27-b9f9bb925a6d', ScheduleParams)
+    insert.insertHmoList(HMO_List)
+    insert.insertSpecializationList(Specialization_List)
+    for (let i = 0; i < 4; i++) {
+        insert.InsertDoctor(DoctorParams[i])
+    }
     res.end()
 }
 
