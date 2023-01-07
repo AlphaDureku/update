@@ -98,7 +98,7 @@ exports.renderUserDirectory = async(req, res) => {
     // for (let i = 0; i < 4; i++) {
     //     insert.InsertDoctor(DoctorParams[i])
     // }
-    //insert.InsertSchedule('MCM-1edede78-4900-43e0-969c-b0424971f5df', ScheduleParams)
+    //insert.InsertSchedule('MCM-6af66b7e-f0e9-47b2-a37a-60f78244114e', ScheduleParams)
     //insert.insert_user('templanzamark2002@gmail.com')
     const result = await patient.fetchUser_Directory()
     res.json(result)

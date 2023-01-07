@@ -13,7 +13,6 @@ const sequelize = new Sequelize(process.env.MYSQLDATABASE, process.env.MYSQLUSER
     }
 })
 
-
 const Head_Manager = sequelize.define('head_Manager', {
     head_Manager_ID: {
         type: DataTypes.STRING(50),
@@ -281,7 +280,7 @@ async function setDoctor_Department(doctorModel) {
 }
 setDoctor_Department(doctorModel)
 */
-
 syncAll()
+
 
 module.exports = sequelize.models
