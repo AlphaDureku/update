@@ -1,0 +1,13 @@
+<% if(locals.queriedPatients != null){%>
+
+    <%queriedPatients.forEach(data=>{%>
+
+        <div>
+            <%=data.patient_first_name%>
+                <%=data.patient_last_name%>
+        </div>
+        <button onclick="window.location.href='/Manage-Appointments/patient/<%=data.patient_ID%>'">View Appointments</button>
+        <%})%>
+
+
+            <%}%>
