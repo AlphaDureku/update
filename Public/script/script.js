@@ -92,7 +92,7 @@ const CompareOTPsetAppointment = (inputOTP) => {
         if (res.isVerified && res.hasHistory) {
             Patient = res.patientList
             console.log(Patient)
-            Patient.forEach(data => {
+            Patient.rows.forEach(data => {
                 $('#patient_row').prepend(`
                 <div class="form-check center mt-4 mb-4">
                 <input type="radio" name="choice" id="${data.patient_ID}" class="inrd" value="${data.patient_ID}">
