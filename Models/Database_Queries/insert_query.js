@@ -118,3 +118,15 @@ exports.findOnePatient = async function(pk) {
     return await model.patient.findByPk(pk, { raw: true })
 
 }
+
+
+exports.insertAdmin = async function(adminModel) {
+    admin = {
+        doctor_Secretary_ID: 'ADMIN-' + uuid.v4(),
+        doctor_Secretary_username: adminModel.username,
+        doctor_Secretary_password: adminModel.password,
+        doctor_ID: adminModel.doctor_ID
+    }
+
+    return await model.doctor_Secretary.create(admin)
+}

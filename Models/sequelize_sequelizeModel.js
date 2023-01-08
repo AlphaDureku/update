@@ -2,9 +2,9 @@ require('dotenv').config();
 const Sequelize = require('sequelize')
 const { DataTypes } = Sequelize
 
-const sequelize = new Sequelize(process.env.MYSQLDATABASE, process.env.MYSQLUSER, process.env.MYSQLPASSWORD, {
-    host: process.env.MYSQLHOST,
-    port: process.env.MYSQLPORT,
+const sequelize = new Sequelize(process.env.DB_NAME2, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: 'mysql',
     define: {
         freezeTableName: true,
@@ -12,6 +12,7 @@ const sequelize = new Sequelize(process.env.MYSQLDATABASE, process.env.MYSQLUSER
 
     }
 })
+
 
 const Head_Manager = sequelize.define('head_Manager', {
     head_Manager_ID: {
@@ -140,16 +141,17 @@ const Doctor_specialization = sequelize.define('doctor_specialization', {
 
 const Doctor_Secretary = sequelize.define('doctor_Secretary', {
     doctor_Secretary_ID: {
-        type: DataTypes.STRING(50)
-    },
-    doctor_ID: {
-        type: DataTypes.STRING(50)
+        type: DataTypes.STRING(50),
+        primaryKey: true
     },
     doctor_Secretary_username: {
         type: DataTypes.STRING
     },
-    doctor_Secretary_ID_password: {
+    doctor_Secretary_password: {
         type: DataTypes.STRING
+    },
+    doctor_ID: {
+        type: DataTypes.STRING(50)
     }
 })
 
@@ -226,7 +228,7 @@ const Doctor_schedule_table = sequelize.define('doctor_schedule_table', {
 
 //Table controller
 async function syncAll() {
-    await sequelize.sync({ alter: true }).then(() => {
+    await sequelize.sync({ force: true }).then(() => {
         console.log("success")
     })
 }
@@ -280,7 +282,6 @@ async function setDoctor_Department(doctorModel) {
 }
 setDoctor_Department(doctorModel)
 */
-
 
 
 module.exports = sequelize.models

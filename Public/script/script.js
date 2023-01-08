@@ -36,6 +36,7 @@ $("#modal-btn").click(function() {
                 }, function(res, status) {
                     console.log(res)
                 })
+                $('#user_email').text($('#inputEmail').val())
                 $('#modal').modal('show');
             } else {
                 $('#homeEmail').css({ 'display': 'block' })
@@ -71,6 +72,7 @@ $("#sendOTP").click(function() {
                 credentials: 'same-origin',
                 patient_Email: $('#inputEmail').val()
             })
+            $('#user_email').text($('#inputEmail').val())
             $('#otpmodal').modal("show")
         } else {
             $('#termsAndServiceError').modal("show")

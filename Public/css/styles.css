@@ -592,72 +592,83 @@ a:hover {
     height: 150px;
 }
 
-.optionstag {
-    flex: content;
-    font-weight: 700;
-    font-size: 25px;
-    line-height: 43px;
-    text-align: center;
-    color: #000000;
+.cbox {
+    height: 540px;
+    width: 943px;
+    border-radius: 75px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 13%;
 }
 
-.formyself {
-    background: #ECECEC;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
-    width: 360px;
-    height: 50px;
+.fcover {
+    width: 943px;
+    height: 540px;
+    border-radius: 75px;
+    background: linear-gradient(90deg, rgba(0, 194, 255, 0.86) 0%, #00CFD8 9.71%, rgba(0, 217, 186, 0.826775) 19.09%, rgba(0, 238, 122, 0.47) 29.01%, rgba(208, 252, 230, 0.71) 46.9%, #FFFFFF 54.06%, #FFFFFF 76.04%);
 }
 
-.forothers {
-    background: #ECECEC;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
-    width: 360px;
-    height: 50px;
+.sectag {
+    margin-top: 23%;
+    margin-left: 6%;
+    margin-bottom: auto;
+    margin-right: auto;
 }
 
-.formyself:hover {
-    background: #ECECEC;
-    border: 1px solid #000000;
+.logtag {
+    margin-top: 12%;
+    margin-bottom: auto;
 }
 
-.forothers:hover {
-    background: rgba(202, 255, 207, 0.5);
-    border: 1px solid #2F9D44;
-    color: #388440;
+#floatingInput {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #24B7E9;
+    width: 340px;
+    outline: none;
+    margin-left: 15px;
+    font-size: 15px;
+    box-shadow: none;
 }
 
-.formyself:hover {
-    background: rgba(202, 255, 207, 0.5);
-    border: 1px solid #2F9D44;
-    color: #388440;
+#usnamelabel {
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 4%;
 }
 
-#bookingchoice2:checked+label {
-    width: 380px;
-    height: 60px;
-    background: rgba(202, 255, 207, 0.5);
-    border: 1px solid #2F9D44;
-    color: #388440;
-    font-weight: 600
+#floatingPassword {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #24B7E9;
+    width: 340px;
+    outline: none;
+    margin-left: 15px;
+    font-size: 15px;
+    box-shadow: none;
 }
 
-#bookingchoice2 {
-    display: none;
+#spasslabel {
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 4%;
 }
 
-#bookingchoice1:checked+label {
-    width: 380px;
-    height: 60px;
-    background: rgba(202, 255, 207, 0.5);
-    border: 1px solid #2F9D44;
-    color: #388440;
-    font-weight: 600
+#last {
+    font-style: italic;
+    font-weight: 300;
+    font-size: 17px;
+    line-height: 30px;
+    color: #2BB5DB;
+    margin-top: 150px;
+    margin-left: 15px;
 }
 
-#bookingchoice1 {
-    display: none;
+.secbg {
+    background: rgba(224, 247, 255, 1);
+    overflow: hidden;
 }

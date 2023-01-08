@@ -9,12 +9,14 @@ const expressLayouts = require("express-ejs-layouts");
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
 const cors = require('cors')
+const bcrypt = require('bcrypt')
 
 //Import routers
 const indexRouter = require("./Routes/index");
 const doctorProfileRouter = require('./Routes/doctor-profile')
 const bookAppointmentRouter = require('./Routes/book-appointment')
 const manageAppontmentRouter = require('./Routes/manageAppointments')
+const adminRouter = require('./Routes/admin')
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -32,13 +34,15 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }))
+
 app.use(expressLayouts);
 app.use(express.static(__dirname + '/Public'));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: false }));
 app.use("/", indexRouter);
 app.use("/Manage-Appointments", manageAppontmentRouter);
 app.use("/Doctor-Profile", doctorProfileRouter);
-app.use("/book-appointment", bookAppointmentRouter)
+app.use("/book-appointment", bookAppointmentRouter);
+app.use("/admin", adminRouter);
 
 
 

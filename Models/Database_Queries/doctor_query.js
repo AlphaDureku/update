@@ -108,8 +108,9 @@ exports.getSchedule = async function() {
         attributes: [
             'doctor_ID', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%W'), 'day'],
-            [Sequelize.col('doctor_schedule_start_time'), 'start'],
-            [Sequelize.col('doctor_schedule_end_time'), 'end']
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
+
         ],
         order: [
             ['doctor_first_name', 'DESC']
@@ -164,8 +165,8 @@ exports.getSchedule_Using_Spec_SubSpec_HMO = async function(searchOption) {
         attributes: [
             'doctor_ID', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%W'), 'day'],
-            [Sequelize.col('doctor_schedule_start_time'), 'start'],
-            [Sequelize.col('doctor_schedule_end_time'), 'end']
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
         ],
 
         include: [{
@@ -241,8 +242,8 @@ exports.getSchedule_Using_All = async function(searchOption) {
         attributes: [
             'doctor_ID', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%W'), 'day'],
-            [Sequelize.col('doctor_schedule_start_time'), 'start'],
-            [Sequelize.col('doctor_schedule_end_time'), 'end']
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
         ],
         include: [{
                 model: model.HMO,
@@ -321,8 +322,8 @@ exports.getSchedule_Using_Fname_Lname = async function(searchOption) {
             'doctor_first_name',
             'doctor_last_name', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%W'), 'day'],
-            [Sequelize.col('doctor_schedule_start_time'), 'start'],
-            [Sequelize.col('doctor_schedule_end_time'), 'end'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
             [Sequelize.col('doctor_schedule_status'), 'status'],
         ],
         order: [
@@ -382,8 +383,8 @@ exports.getSchedule_Using_Fname = async function(searchOption) {
         attributes: [
             'doctor_first_name', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%W'), 'day'],
-            [Sequelize.col('doctor_schedule_start_time'), 'start'],
-            [Sequelize.col('doctor_schedule_end_time'), 'end'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
             [Sequelize.col('doctor_schedule_status'), 'status'],
         ],
 
@@ -439,8 +440,8 @@ exports.getSchedule_Using_Lname = async function(searchOption) {
         attributes: [
             'doctor_last_name', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%W'), 'day'],
-            [Sequelize.col('doctor_schedule_start_time'), 'start'],
-            [Sequelize.col('doctor_schedule_end_time'), 'end'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
             [Sequelize.col('doctor_schedule_status'), 'status'],
         ],
         order: [
