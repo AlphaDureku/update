@@ -101,9 +101,9 @@ exports.insert = async(req, res) => {
     // for (let i = 0; i < 4; i++) {
     //     insert.InsertDoctor(DoctorParams[i])
     // }
-    insert.InsertSchedule('MCM-29b0111a-d4ba-46da-93fe-6092ccd03928', ScheduleParams[0])
-    insert.InsertSchedule('MCM-49d8d4fa-4daf-4aae-a6c0-634273c6a3eb', ScheduleParams[1])
-    insert.InsertSchedule('MCM-64b28d1e-19a8-415e-a5f4-6964a3965a35', ScheduleParams[2])
+    // insert.InsertSchedule('MCM-29b0111a-d4ba-46da-93fe-6092ccd03928', ScheduleParams[0])
+    // insert.InsertSchedule('MCM-49d8d4fa-4daf-4aae-a6c0-634273c6a3eb', ScheduleParams[1])
+    // insert.InsertSchedule('MCM-64b28d1e-19a8-415e-a5f4-6964a3965a35', ScheduleParams[2])
     res.end()
 }
 
@@ -115,7 +115,7 @@ exports.renderUserDirectory = async(req, res) => {
     // for (let i = 0; i < 4; i++) {
     //     insert.InsertDoctor(DoctorParams[i])
     // }
-    //insert.InsertSchedule('MCM-6af66b7e-f0e9-47b2-a37a-60f78244114e', ScheduleParams)
+    // insert.InsertSchedule('MCM-2511eecf-5030-48a8-b1f8-488c0a5abef4', ScheduleParams[0])
     //insert.insert_user('templanzamark2002@gmail.com')
     const result = await patient.fetchUser_Directory()
     res.json(result)

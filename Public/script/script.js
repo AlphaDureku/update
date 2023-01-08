@@ -91,11 +91,12 @@ const CompareOTPsetAppointment = (inputOTP) => {
     }, function(res, status) {
         if (res.isVerified && res.hasHistory) {
             Patient = res.patientList
+            console.log(Patient)
             Patient.forEach(data => {
                 $('#patient_row').prepend(`
-                <div class="form-check  center mt-3 ">
-                <input type="radio" id="bookingchoice1" value="${data.patient_ID}" name="choice" />
-                <label class="btn formyself center" for="bookingchoice1">${data.patient_first_name} ${data.patient_last_name}</label>
+                <div class="form-check center mt-4 mb-4">
+                <input type="radio" name="choice" id="${data.patient_ID}" class="inrd" value="${data.patient_ID}">
+                <label for="${data.patient_ID}" class="rdlabel center">${data.patient_first_name} ${data.patient_last_name}</label>
             </div>`)
             })
             $("#otpmodal").modal("hide");
@@ -107,10 +108,17 @@ const CompareOTPsetAppointment = (inputOTP) => {
         }
     })
 }
+
+$("#cancel_modal2").click(function() {
+    $('#patientRecordModel').modal('hide');
+})
+
 $("#cancel_modal").click(function() {
     $('#otpError').css({ 'display': 'none' })
     $('#otpInput').val('')
 })
+
+
 
 $("#modalBtn").click(function() {
     $("#terms").modal("show");

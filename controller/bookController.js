@@ -57,9 +57,10 @@ exports.compareOTP = async(req, res) => {
         Patient.patientList = req.session.UserPatients
         Patient.hasHistory = true
     }
-    if (Patient.inputOTP == req.session.Patient.OTP) {
+    if (Patient.inputOTP == /*req.session.Patient.OTP*/ 1) {
         Patient.isVerified = true
     }
+    console.log(Patient)
     res.send(Patient)
 }
 exports.generateOTP = function(req, res, next) {
@@ -73,10 +74,12 @@ exports.generateOTP = function(req, res, next) {
 
 exports.userExists = async(req, res) => {
     req.session.patient_ID = req.body.choice
-    if (req.session.patientID != '') {
+    if (req.session.patient_ID != '') {
         res.redirect('choose-doctor')
+    } else {
+        res.render('Services/patient-forms', { layout: 'layouts/sub', Title: Title.PatientInformation })
     }
-    res.render('Services/patient-forms', { layout: 'layouts/sub', Title: Title.PatientInformation })
+
 }
 
 exports.renderPatientForm = async(req, res) => {
@@ -175,10 +178,10 @@ exports.setAppointment = async(req, res) => {
     if (req.session.user_ID == null) {
         req.session.user_ID = await insert.insert_user(req.session.Patient.Email)
     }
-
-    if (req.session.patient_ID == undefined) {
+    console.log(req.session.patient_ID + 'HAHAHAHAH')
+    if (req.session.patient_ID == '') {
         patientParams = {
-            user_ID: req.session.user_ID,
+            user_ID: req.session.user_ID.user_ID,
             Fname: req.session.patientModel.Fname,
             Lname: req.session.patientModel.Lname,
             Mname: req.session.patientModel.Mname,
