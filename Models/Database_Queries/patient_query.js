@@ -51,10 +51,15 @@ exports.fetch_User_Patients = async function(user_ID) {
     })
 }
 
-exports.fetch_Patient_Email_Using_Patient_ID = async function(patient_ID) {
+exports.fetch_Patient_Info_Using_Patient_ID = async function(patient_ID) {
     return await model.patient.findOne({
         raw: true,
         attributes: [
+            'patient_first_name',
+            'patient_last_name',
+            'patient_middle_name',
+            'patient_contact_number', [Sequelize.fn('date_format', Sequelize.col('patient_dateOfBirth'), '%Y-%m-%d'), 'dateOfBirth'],
+            'patient_address',
             'patient_gender', [Sequelize.col('user_email'), 'email'],
         ],
         include: [{
@@ -86,8 +91,8 @@ exports.fetchPatient_Appointments_Using_Patient_ID = async function(patient_ID) 
             [Sequelize.col('doctor_last_name'), 'doctor_Lname'],
             [Sequelize.col('appointment_type'), 'type'],
             [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
-            [Sequelize.col('doctor_schedule_start_time'), 'start'],
-            [Sequelize.col('doctor_schedule_end_time'), 'end'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
             [Sequelize.col('appointment_status'), 'status'],
         ],
         include: [{
@@ -192,5 +197,20 @@ exports.getReceipt = async function(doctor_schedule_ID) {
         }],
 
 
+    })
+}
+
+exports.updatePatientInfo = async function(patientModel) {
+    await model.patient.update({
+        patient_first_name: patientModel.Fname,
+        patient_middle_name: patientModel.Mname,
+        patient_last_name: patientModel.Lname,
+        patient_contact_number: patientModel.contact,
+        patient_address: patientModel.address,
+        patient_dateOfBirth: patientModel.birth
+    }, {
+        where: {
+            patient_ID: patientModel.patient_ID
+        }
     })
 }

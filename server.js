@@ -29,7 +29,7 @@ app.use(cors({
 app.use(session({
     secret: 'secret-key',
     store: new MemoryStore({
-        checkPeriod: 1800
+        checkPeriod: 5000
     }),
     resave: true,
     saveUninitialized: false

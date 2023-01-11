@@ -179,9 +179,9 @@ exports.setAppointment = async(req, res) => {
         req.session.user_ID = await insert.insert_user(req.session.Patient.Email)
     }
     console.log(req.session.patient_ID + 'HAHAHAHAH')
-    if (req.session.patient_ID == '') {
+    if (req.session.patient_ID == undefined || req.session.patient_ID == '') {
         patientParams = {
-            user_ID: req.session.user_ID.user_ID,
+            user_ID: req.session.user_ID,
             Fname: req.session.patientModel.Fname,
             Lname: req.session.patientModel.Lname,
             Mname: req.session.patientModel.Mname,

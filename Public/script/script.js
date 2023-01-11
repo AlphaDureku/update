@@ -20,7 +20,7 @@ $(document).ready(function() {
 });
 
 
-0 //Selected Service Page
+
 $("#modal-btn").click(function() {
     if (isValidEmail($('#inputEmail').val())) {
         $.get("/user-directory", function(data, status) {
@@ -49,6 +49,8 @@ $("#modal-btn").click(function() {
         $('#homeEmail').html("Invalid email. Please enter a valid one.")
         $('#error').modal('show');
     }
+
+
 });
 
 const trackingCompareOTP = (inputOTP, inputEmail) => {
@@ -58,6 +60,8 @@ const trackingCompareOTP = (inputOTP, inputEmail) => {
     }, function(res, status) {
         console.log(res.isVerified)
         if (res.isVerified) {
+            $('#otpInput').val('')
+            $('#inputEmail').val('')
             $(location).attr('href', `/Manage-Appointments/${res.user_ID}`);
         } else {
             $('#otpError').css({ 'display': 'block' })
@@ -82,19 +86,20 @@ $("#sendOTP").click(function() {
         $('#invalidEmailError').modal("show")
     }
 
-
 })
+
 const CompareOTPsetAppointment = (inputOTP) => {
     $.post("/book-appointment/verify-otp", {
         credentials: 'same-origin',
         inputOTP: inputOTP,
     }, function(res, status) {
         if (res.isVerified && res.hasHistory) {
+            $('#patient_row').children().not(':last').remove();
             Patient = res.patientList
             console.log(Patient)
             Patient.rows.forEach(data => {
                 $('#patient_row').prepend(`
-                <div class="form-check center mt-4 mb-4">
+                <div class="form-check center  mb-4">
                 <input type="radio" name="choice" id="${data.patient_ID}" class="inrd" value="${data.patient_ID}">
                 <label for="${data.patient_ID}" class="rdlabel center">${data.patient_first_name} ${data.patient_last_name}</label>
             </div>`)

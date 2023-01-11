@@ -13,7 +13,6 @@ $.get("/book-appointment/get-schedule", function(data, status) {
 });
 
 const renderCalendar = (enabledDays) => {
-
     $('.datepicker-here').datepicker({
         dateFormat: 'yyyy/mm/dd',
         onSelect() {

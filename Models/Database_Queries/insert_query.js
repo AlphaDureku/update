@@ -75,19 +75,6 @@ exports.insertSpecializationList = async function(specialization_List) {
 }
 
 
-exports.InsertSchedule = async function(doctor_ID, params) {
-    const schedule_tableModel = {
-        doctor_schedule_ID: uuid.v4(),
-        doctor_ID: doctor_ID,
-        doctor_schedule_date: params.date,
-        doctor_schedule_start_time: params.start_time,
-        doctor_schedule_end_time: params.end_time,
-        doctor_schedule_max_patient: params.total_patient,
-    }
-    const newSchedule = await model.doctor_schedule_table.create(schedule_tableModel)
-    console.log(newSchedule)
-}
-
 
 exports.insertAppointmentDetails = async function(params) {
     const appointmentdetailsModel = {
@@ -104,7 +91,7 @@ exports.insertAppointmentDetails = async function(params) {
 }
 
 
-
+/*
 exports.findOneDoctor = async function(pk) {
     return await model.doctor.findByPk(pk, { raw: true })
 
@@ -117,16 +104,27 @@ exports.findOneSchedule = async function(pk) {
 exports.findOnePatient = async function(pk) {
     return await model.patient.findByPk(pk, { raw: true })
 
-}
-
+}*/
 
 exports.insertAdmin = async function(adminModel) {
     admin = {
         doctor_Secretary_ID: 'ADMIN-' + uuid.v4(),
         doctor_Secretary_username: adminModel.username,
         doctor_Secretary_password: adminModel.password,
-        doctor_ID: adminModel.doctor_ID
+        doctor_Secretary_first_name: adminModel.Fname,
+        doctor_Secretary_last_name: adminModel.Lname,
     }
-
     return await model.doctor_Secretary.create(admin)
+}
+
+exports.insertDoctorAvailability = async function(params) {
+    const schedule_tableModel = {
+        doctor_schedule_ID: uuid.v4(),
+        doctor_ID: params.doctor_ID,
+        doctor_schedule_date: params.date,
+        doctor_schedule_start_time: params.start,
+        doctor_schedule_end_time: params.end,
+        doctor_schedule_max_patient: params.maxPatient,
+    }
+    const newSchedule = await model.doctor_schedule_table.create(schedule_tableModel)
 }

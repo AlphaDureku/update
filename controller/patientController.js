@@ -15,7 +15,21 @@ exports.fetchPatient_Appointments_Using_Patient_ID = async(req, res) => {
 }
 
 exports.editPatientInfo_Using_Patient_ID = async(req, res) => {
-    const result = await patient.fetch_Patient_Email_Using_Patient_ID(req.params.id)
-
+    req.session.patient_ID = req.params.id
+    const result = await patient.fetch_Patient_Info_Using_Patient_ID(req.params.id)
     res.render('Patient/Edit-Info', { result: result, layout: 'layouts/sub', Title: 'Edit Patient Information' })
+}
+
+exports.getnewPatientInfo = async(req, res) => {
+    let patientModel = {
+        patient_ID: req.session.patient_ID,
+        Fname: req.body.Fname,
+        Mname: req.body.Mname,
+        Lname: req.body.Lname,
+        birth: req.body.birth,
+        address: req.body.address,
+        contact: req.body.contact
+    }
+    await patient.updatePatientInfo(patientModel)
+    console.log(patientModel)
 }

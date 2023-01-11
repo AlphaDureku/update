@@ -2,9 +2,9 @@ require('dotenv').config();
 const Sequelize = require('sequelize')
 const { DataTypes } = Sequelize
 
-const sequelize = new Sequelize(process.env.MYSQLDATABASE, process.env.MYSQLUSER, process.env.MYSQLPASSWORD, {
-    host: process.env.MYSQLHOST,
-    port: process.env.MYSQLPORT,
+const sequelize = new Sequelize(process.env.DB_NAME2, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: 'mysql',
     define: {
         freezeTableName: true,
@@ -150,9 +150,15 @@ const Doctor_Secretary = sequelize.define('doctor_Secretary', {
     doctor_Secretary_password: {
         type: DataTypes.STRING
     },
-    doctor_ID: {
-        type: DataTypes.STRING(50)
-    }
+    doctor_Secretary_first_name: {
+        type: DataTypes.STRING
+    },
+    doctor_Secretary_middle_name: {
+        type: DataTypes.STRING
+    },
+    doctor_Secretary_last_name: {
+        type: DataTypes.STRING
+    },
 })
 
 
@@ -222,7 +228,7 @@ const Doctor_schedule_table = sequelize.define('doctor_schedule_table', {
         type: Sequelize.ENUM,
         values: ['Available', 'Unavailable'],
         defaultValue: 'Available'
-    }
+    },
 })
 
 
@@ -246,8 +252,8 @@ async function clearTable(table) {
 
 Doctor.hasMany(Doctor_schedule_table, { foreignKey: 'doctor_ID' })
 Doctor_schedule_table.belongsTo(Doctor, { foreignKey: 'doctor_ID' })
-Doctor.hasOne(Doctor_Secretary, { foreignKey: 'doctor_ID' })
-Doctor_Secretary.belongsTo(Doctor, { foreignKey: 'doctor_ID' })
+Doctor_Secretary.hasMany(Doctor)
+Doctor.belongsTo(Doctor_Secretary)
 Doctor.hasMany(AppointmentDetails, { foreignKey: 'doctor_ID' })
 AppointmentDetails.belongsTo(Doctor, { foreignKey: 'doctor_ID' })
 User.hasMany(Patient, { foreignKey: 'user_ID' })
@@ -282,6 +288,7 @@ async function setDoctor_Department(doctorModel) {
 }
 setDoctor_Department(doctorModel)
 */
+
 
 
 module.exports = sequelize.models

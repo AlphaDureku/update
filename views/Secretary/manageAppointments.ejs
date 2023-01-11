@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="/css/calendar.css">
+<div class="col-5 managemiddleside  ">
+    <form action="manage-appointments" method="GET">
+        <div class="row">
+            <div class="col">
+                <div class="searcwrapper mt-4 ms-4">
+                    <input type="search" class="form-control " placeholder="Search appointments" aria-label="Search" aria-describedby="search-addon" id="searchbardes" name="nameQuery" />
+                </div>
+            </div>
+
+            <div class="col me-4">
+                <select onchange="this.form.submit()" class="form-select float-end mt-4 " aria-label="Default select example" id="outdoctorfilter" name="doctor_ID">
+                <%doctors.forEach(data=>{%>
+                    <option value="<%=data.doctor_ID%>">Dr. <%=data.doctor_first_name%> <%=data.doctor_last_name%></option>
+                <%})%>
+              </select>
+            </div>
+    </form>
+    </div>
+
+    <div class="container managecalendarbox mt-5">
+        <div class="row">
+            <p class="availheadertag mt-4 ms-3 ">Schedule Calendar</p>
+            <span class="ms-3">Choose a date to view appointments</span>
+            <div class="row text-center mb-4 mt-4">
+
+                <div class="col ">
+                    <img src="/assets/partiallybooked.png" alt=""><label style="margin-left: 5%; font-weight: 600; color: #2F9D44;">With Appointments</label>
+                </div>
+
+                <div class="col ">
+                    <img src="/assets/whitec.png" alt=""><label style="margin-left: 5%; font-weight: 600;color: #434343;">No aappointments</label>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row ">
+            <div class="center">
+                <div class="datepicker-here"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="center">
+        <div class=" notifydoctor mt-3">
+            <div class="row mt-3 ms-3">
+                <p class="availheadertag">Notify doctor on appointments</p>
+            </div>
+            <div class="row">
+                <div class="form-check  center mt-3 ">
+                    <input type="button" id="arqs" />
+                    <label class="btn sendnotif center" for="arqs">
+                      NOTIFY DOCTOR
+                    </label>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="col rightside ">
+    <div class="row">
+        <div class=" container  manageapplist mt-4 flex-column">
+            <!--ACCEPTED LIST-->
+            <%-include('../partials/manageAppointmentList')%>
+        </div>
+
+    </div>
+    <div class="row">
+
+        <div class="center">
+            <div class=" notifypatient mt-3">
+                <div class="row mt-3 ms-3">
+                    <p class="availheadertag">Notify patients on their appointments</p>
+                </div>
+                <div class="row">
+                    <div class="form-check  center mt-3 ">
+                        <input type="button" id="arqs" />
+                        <label class="btn sendnotif center" for="arqs">
+                      NOTIFY PATIENTS
+                    </label>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="center">
+            <div class=" notifypatient mt-3">
+                <div class="row mt-3 ms-3">
+                    <p class="availheadertag">Notify patients on cancelation or rescheduling of appointments.</p>
+                </div>
+                <div class="row">
+                    <div class="form-check  center mt-3 ">
+                        <input type="button" id="arqs" />
+                        <label class="btn cancelnotif center" for="arqs">
+                      CANCEL APPOINTMENTS
+                    </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#outdoctorfilter').val('<%=doctor_IDselect%>')
+    $(function() {
+        $('#acceptedsecapplist').hide();
+    });
+    $('.datepicker-here').datepicker({
+        language: 'en',
+        inline: true
+    })
+    $.get("get-calendar", function(data, status) {
+        let enabledDays = []
+        data.forEach(res => {
+            enabledDays.push(res.date2)
+        })
+        renderCalendar(enabledDays);
+    });
+
+    const renderCalendar = (enabledDays) => {
+
+        $(function() {
+            $('.datepicker-here').datepicker({
+                dateFormat: 'mm/dd/yyyy',
+                minDate: new Date(),
+                onSelect: function(date) {
+                    $('#inputDate').val(date)
+                },
+                onRenderCell: function onRenderCell(date, cellType) {
+                    if (cellType == 'day') {
+                        var day = (date.getFullYear() + '-' + (('0' + (date.getMonth() + 1)).slice(-2)) + '-' + (('0' + date.getDate()).slice(-2)));
+                        var isDisabled = enabledDays.indexOf(day) == -1;
+                        return {
+                            disabled: isDisabled
+                        }
+                    }
+                }
+            })
+        });
+
+    }
+</script>

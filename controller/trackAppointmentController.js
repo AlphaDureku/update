@@ -112,10 +112,10 @@ exports.insert = async(req, res) => {
 exports.renderUserDirectory = async(req, res) => {
     // insert.insertHmoList(HMO_List)
     // insert.insertSpecializationList(Specialization_List)
-    // for (let i = 0; i < 4; i++) {
+    // for (let i = 0; i < 3; i++) {
     //     insert.InsertDoctor(DoctorParams[i])
     // }
-    // insert.InsertSchedule('MCM-2511eecf-5030-48a8-b1f8-488c0a5abef4', ScheduleParams[0])
+    //insert.InsertSchedule('MCM-2b5ba5b4-7cce-4453-b22a-a66014bb5a64', ScheduleParams[0])
     //insert.insert_user('templanzamark2002@gmail.com')
     const result = await patient.fetchUser_Directory()
     res.json(result)

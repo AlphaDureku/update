@@ -1,12 +1,21 @@
 const model = require('../sequelize_sequelizeModel')
 const uuid = require('uuid')
 const Sequelize = require('sequelize')
+const moment = require('moment');
+const e = require('express');
 
 
 const age = Sequelize.fn(
     'TIMESTAMPDIFF',
     Sequelize.literal('YEAR'),
     Sequelize.literal('doctor_dateOfBirth'),
+    Sequelize.fn('NOW')
+);
+
+const patient_age = Sequelize.fn(
+    'TIMESTAMPDIFF',
+    Sequelize.literal('YEAR'),
+    Sequelize.literal('patient_dateOfBirth'),
     Sequelize.fn('NOW')
 );
 
@@ -488,6 +497,129 @@ exports.incrementQueue = async function(doctor_schedule_ID) {
 }
 
 
+
+exports.fetchDoctorPatientAppointments = async function(doctor_ID, startOfWhat, endOfWhat) {
+    return await model.appointmentDetails.findAll({
+        raw: true,
+        attributes: [
+            'appointment_ID',
+            'patient_ID', [Sequelize.col('patient_first_name'), 'patient_Fname'],
+            [Sequelize.col('patient_last_name'), 'patient_Lname'],
+            [Sequelize.col('patient_gender'), 'gender'],
+            [patient_age, 'age'],
+            [Sequelize.col('patient_contact_number'), 'contact'],
+            [Sequelize.col('user_email'), 'email'],
+            [Sequelize.col('doctor_first_name'), 'doctor_Fname'],
+            [Sequelize.col('doctor_last_name'), 'doctor_Lname'],
+            [Sequelize.col('doctor_first_name'), 'doctor_Fname'],
+            [Sequelize.col('specialization_Name'), 'specialization'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%M %e, %Y'), 'modalDate'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%m/%d/%Y'), 'appointmentDate'],
+            ['appointment_status', 'status']
+        ],
+        include: [{
+            model: model.doctor,
+            attributes: [],
+            include: [{
+                model: model.doctor_specialization,
+                attributes: [],
+            }]
+
+        }, {
+            model: model.patient,
+            attributes: [],
+            required: true,
+            include: [{
+                model: model.user,
+                attributes: [],
+            }]
+        }, {
+            model: model.doctor_schedule_table,
+            attributes: [],
+            where: {
+                doctor_schedule_date: {
+                    [Sequelize.Op.between]: [startOfWhat, endOfWhat]
+                }
+            },
+
+        }],
+        where: {
+            doctor_ID: doctor_ID,
+
+        }
+    })
+}
+
+exports.fetchDoctorPatientAppointmentsWithName = async function(doctor_ID, startOfWhat, endOfWhat, query) {
+    return await model.appointmentDetails.findAll({
+        raw: true,
+        attributes: [
+            'appointment_ID',
+            'patient_ID', [Sequelize.col('patient_first_name'), 'patient_Fname'],
+            [Sequelize.col('patient_last_name'), 'patient_Lname'],
+            [Sequelize.col('patient_gender'), 'gender'],
+            [patient_age, 'age'],
+            [Sequelize.col('patient_contact_number'), 'contact'],
+            [Sequelize.col('user_email'), 'email'],
+            [Sequelize.col('doctor_first_name'), 'doctor_Fname'],
+            [Sequelize.col('doctor_last_name'), 'doctor_Lname'],
+            [Sequelize.col('doctor_first_name'), 'doctor_Fname'],
+            [Sequelize.col('specialization_Name'), 'specialization'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_end_time'), '%h:%i%p'), 'end'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%M %e, %Y'), 'modalDate'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%m/%d/%Y'), 'appointmentDate'],
+            ['appointment_status', 'status']
+        ],
+        include: [{
+            model: model.doctor,
+            attributes: [],
+            include: [{
+                model: model.doctor_specialization,
+                attributes: [],
+            }]
+
+        }, {
+            model: model.patient,
+            attributes: [],
+            include: [{
+                model: model.user,
+                attributes: [],
+            }],
+            where: [{
+                [Sequelize.Op.or]: [{
+                        patient_first_name: {
+                            [Sequelize.Op.like]: `%${query}%`
+                        }
+                    },
+                    {
+                        patient_last_name: {
+                            [Sequelize.Op.like]: `%${query}%`
+                        }
+                    }
+                ]
+
+            }]
+        }, {
+            model: model.doctor_schedule_table,
+            attributes: [],
+            where: {
+                doctor_schedule_date: {
+                    [Sequelize.Op.between]: [startOfWhat, endOfWhat]
+                }
+            },
+
+        }],
+        where: {
+            doctor_ID: doctor_ID,
+
+        }
+    })
+}
+
+/*
 exports.selectDoctorAndSched = async function(doctor_ID) {
     return await model.doctor.findAll({
         raw: true,
@@ -511,3 +643,4 @@ exports.selectDoctorAndSched = async function(doctor_ID) {
         }],
     })
 }
+*/
