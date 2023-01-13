@@ -243,7 +243,7 @@ const Doctor_schedule_table = sequelize.define('doctor_schedule_table', {
 
 //Table controller
 async function syncAll() {
-    await sequelize.sync({ alter: true }).then(() => {
+    await sequelize.sync({ force: true }).then(() => {
         console.log("success")
     })
 }
