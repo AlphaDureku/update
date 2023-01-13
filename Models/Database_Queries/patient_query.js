@@ -182,6 +182,7 @@ exports.getReceipt = async function(doctor_schedule_ID) {
             'doctor_first_name',
             'doctor_last_name', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
             [Sequelize.col('doctor_specialization.specialization_Name'), 'specialization'],
+            [Sequelize.col('doctor_schedule_date'), 'date'],
             [Sequelize.col('doctor_schedule_start_time'), 'start'],
             [Sequelize.col('doctor_schedule_end_time'), 'end'],
         ],
@@ -212,5 +213,25 @@ exports.updatePatientInfo = async function(patientModel) {
         where: {
             patient_ID: patientModel.patient_ID
         }
+    })
+}
+
+exports.getAppointmentEmail = async function(ID) {
+    return await model.appointmentDetails.findAll({
+        raw: true,
+        attributes: [
+            [Sequelize.col('user_email'), 'email'],
+        ],
+        include: [{
+            model: model.patient,
+            attributes: [],
+            include: [{
+                model: model.user,
+                attributes: []
+            }]
+        }],
+        where: [{
+            appointment_ID: ID
+        }]
     })
 }

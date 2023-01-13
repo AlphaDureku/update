@@ -15,6 +15,8 @@ router.get('/get-calendar', adminController.renderSchedule)
 router.post('/set-schedule', adminController.insertDoctorAvailability)
 router.post('/update-appointment', adminController.updateAppointment)
 router.get('/manage-appointments', adminController.manageAppointments)
-
+router.get('/get-appointment-list', adminController.manageAppointmentList)
+router.post('/notify-doctor', adminController.notifyDoctorOnAppointment)
+router.post('/notify-patient', adminController.notifyPatientsOnAppointment)
 
 module.exports = router;

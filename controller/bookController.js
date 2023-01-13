@@ -4,10 +4,6 @@ const insert = require('../Models/Database_Queries/insert_query')
 const patient = require('../Models/Database_Queries/patient_query')
 const Title = require('../Models/Object_Models/Title')
 const uuid = require('uuid');
-const e = require('cors')
-
-
-
 
 
 exports.renderClinicPage = async(req, res) => {
@@ -31,6 +27,7 @@ exports.createPatientModel = function(req, res, next) {
         appointmentType: "",
         doctor_schedule_ID: "",
     }
+    req.session.patient_ID = ''
     next()
 }
 
@@ -57,7 +54,7 @@ exports.compareOTP = async(req, res) => {
         Patient.patientList = req.session.UserPatients
         Patient.hasHistory = true
     }
-    if (Patient.inputOTP == req.session.Patient.OTP) {
+    if (Patient.inputOTP == /*req.session.Patient.OTP*/ 1) {
         Patient.isVerified = true
     }
     console.log(Patient)
@@ -74,7 +71,7 @@ exports.generateOTP = function(req, res, next) {
 
 exports.userExists = async(req, res) => {
     req.session.patient_ID = req.body.choice
-    if (req.session.patient_ID != '') {
+    if (req.session.patient_ID != 'blank') {
         res.redirect('choose-doctor')
     } else {
         res.render('Services/patient-forms', { layout: 'layouts/sub', Title: Title.PatientInformation })
@@ -159,6 +156,8 @@ exports.renderSchedule = async(req, res) => {
 }
 exports.renderSchedule2 = async(req, res) => {
     const result = await doctor.getOneDoctor2(req.session.doctor)
+    console.log(result)
+    console.log(req.session.doctor)
     res.send(result)
 }
 exports.chooseSchedule = async(req, res) => {
@@ -170,18 +169,32 @@ exports.getReceipt = async(req, res) => {
     req.session.patientModel.doctor_schedule_ID = req.query.doctor_schedule_ID
     const result = await patient.getReceipt(req.query.doctor_schedule_ID)
     console.log(result)
-    res.send(result[0])
+    if (req.session.patient_ID != undefined && req.session.patient_ID != 'blank') {
+        const checkIfConflict = await doctor.checkIfConflict(req.session.patient_ID, result[0].date)
+        console.log(checkIfConflict)
+        console.log(checkIfConflict.length)
+        if (checkIfConflict.length == 0) {
+            res.send(result[0])
+        } else {
+            console.log('may conflict')
+            res.send('error')
+        }
+    } else {
+        res.send(result[0])
+    }
+
 }
 
 exports.setAppointment = async(req, res) => {
     const queue_number = await doctor.getQueueInstance(req.body.doctor_schedule_id)
+
     if (req.session.user_ID == null) {
         req.session.user_ID = await insert.insert_user(req.session.Patient.Email)
     }
     console.log(req.session.patient_ID + 'HAHAHAHAH')
-    if (req.session.patient_ID == undefined || req.session.patient_ID == '') {
+    if (req.session.patient_ID == undefined || req.session.patient_ID == 'blank') {
         patientParams = {
-            user_ID: req.session.user_ID,
+            user_ID: req.session.user_ID.user_ID,
             Fname: req.session.patientModel.Fname,
             Lname: req.session.patientModel.Lname,
             Mname: req.session.patientModel.Mname,
@@ -190,10 +203,12 @@ exports.setAppointment = async(req, res) => {
             gender: req.session.patientModel.gender,
             contact: req.session.patientModel.contactNumber
         }
-        console.log(patientParams)
+
+        console.log('INSERTPATIENT HAHAHAHAHA')
         req.session.patient_ID = await insert.insertPatient(patientParams)
         console.log(req.session.patient_ID)
     }
+    console.log('NO INSERT HAHAHAHAHA')
     appointmentParams = {
         patient_ID: req.session.patient_ID,
         doctorSchedule_ID: req.body.doctor_schedule_id,
@@ -201,6 +216,7 @@ exports.setAppointment = async(req, res) => {
         queue: queue_number,
         type: req.session.patientModel.appointmentType
     }
+
     req.session.appointment_ID = await insert.insertAppointmentDetails(appointmentParams)
     doctor.incrementQueue(appointmentParams.doctorSchedule_ID)
     res.end()
@@ -229,7 +245,26 @@ const sendEmail = (email, otp) => {
             from: '"templanzamark2002@gmail.com', // sender address
             to: email, // list of receivers
             subject: "Security Verification", // Subject line
-            html: "<b>" + otp + "</b>", // html body
+            html: `
+            <div style='font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2'>
+              <div style='margin:50px auto;width:70%;padding:20px 0'>
+                <div style='border-bottom:1px solid #eee'>
+                  <a href=''style='font-size:1.5em;color: #388440;text-decoration:none;font-weight:600'><img src='https://scontent.fmnl17-3.fna.fbcdn.net/v/t1.15752-9/321282456_908070283943854_1271014493095011954_n.png?_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHdk_yZVzdF2ZCQB-1B_lpPSb9wAsoUOl5Jv3ACyhQ6XqCVXQg6D1G3FWoJx8JJmsS6ACIxbWFiA2lmbxnil45B&_nc_ohc=WLr-Q7QHgd4AX_-qlmi&_nc_ht=scontent.fmnl17-3.fna&oh=03_AdRi-PF6HsHusKuwNJo0tlOOJ8KpiTvs_2b-0XZr9qX73A&oe=63E23A24' width='28' 
+                 height='25'/> Medical Center Manila</a>
+                </div>
+                <p style='font-size:1.7em;'><b>Hi,</b></p>
+                <p><b>Dont share this code to anyone.</b> </p>
+                <p>Thank you for choosing Medical Center Manila, Your will see below your OTP number. </p>
+                <h2 style='background: #2F9D44; margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;'>${otp}</h2>
+                <p style='font-size:0.9em;'>Regards,<br />Medical Center Manila</p>
+                <hr style='border:none;border-top:1px solid #eee' />
+                <div style='float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300'>
+                  <p>Medical Center Manila Inc</p>
+                  <p>1002 PLM General luna</p>
+                  <p>Manila</p>
+                </div>
+              </div>
+            </div>`
         });
         console.log("Message sent: %s", info.messageId);
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>

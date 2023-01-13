@@ -41,7 +41,7 @@
             </div>
             <div class="col">
                 <label class="patientInfo mb-3">Middle Name</label>
-                <input type="text" class="form-control" name="Mname" required>
+                <input type="text" class="form-control" name="Mname">
             </div>
             <div class="col">
 
@@ -51,21 +51,36 @@
 
             </div>
         </div>
-        <div class="row pt-5">
-            <div class="col">
-
-                <label class="patientInfo mb-3">Date of Birth</label>
-                <label class="required" style="color: #FF0000;font-weight: 900;">*</label>
-                <input id="Date" class="form-control" type="date" name="dateOfBirth" required/>
+        <div class="col">
+            <div class="row">
 
             </div>
-            <div class="col">
+            <div class="row pt-5">
+                <div class="col">
+                    <label class="patientInfo mb-3">Date of Birth</label>
+                    <label class="required" style="color: #FF0000;font-weight: 900;">*</label>
+                    <input id="Date" class="form-control" type="date" name="dateOfBirth" required/>
+                </div>
+                <div class="col">
+                    <label class="patientInfo mb-3">Contact Number</label>
+                    <label class="required" style="color: #FF0000;font-weight: 900;">*</label>
+                    <input type="tel" id="typePhone" class="form-control" name="contactNumber" value="+63" required/>
 
-                <label class="patientInfo mb-3">Contact Number</label>
-                <label class="required" style="color: #FF0000;font-weight: 900;">*</label>
-                <input type="tel" id="typePhone" class="form-control" name="contactNumber" required/>
+                </div>
+                <div class="col">
+                    <label class="patientInfo ">Gender</label>
+                    <label class="required" style="color: #FF0000;font-weight: 900;">*</label><br>
+                    <div class="form-check-inline mt-3 subp" style="font-size: 15px;">
+                        <input class="form-check-input" type="radio" name="gender" value="M">
+                        <label class="form-check-label" for="radios1"> Male </label> </div>
+                    <div class="form-check-inline mt-2 subp" style="font-size: 15px;">
+                        <input class="form-check-input" type="radio" name="gender" value="F">
+                        <label class="form-check-label" for="radios2">Female</label>
+                    </div>
+                </div>
 
             </div>
+
         </div>
         <div class="row pt-5 mb-3 ">
             <div class="col">
@@ -73,29 +88,12 @@
                 <div class="form-outline ">
                     <label class="form-label" for="formA">Address</label>
                     <label class="required" style="color: #FF0000;font-weight: 900;">*</label>
-                    <input type="text" id="formA" class="form-control" name="address" required/>
+                    <input type="text" id="formA" class="form-control" name="address" style="width: 600px;" required/>
                 </div>
 
             </div>
 
-            <div class="col">
-                <div class="row">
-                    <div class="col">
 
-                        <label class="patientInfo ">Gender</label>
-                        <label class="required" style="color: #FF0000;font-weight: 900;">*</label>
-
-                    </div>
-                </div>
-                <div class="form-check-inline mt-3 subp" style="font-size: 15px;">
-                    <input class="form-check-input" type="radio" name="gender" value="M" checked>
-                    <label class="form-check-label" for="radios1"> Male </label> </div>
-                <div class="form-check-inline mt-2 subp" style="font-size: 15px;">
-                    <input class="form-check-input" type="radio" name="gender" value="F">
-                    <label class="form-check-label" for="radios2">Female</label>
-
-                </div>
-            </div>
         </div>
         <div class="row pt-5 justify-content-end">
             <button type="button" class="btn btn-success btn me-3 rbutton " style="width: 110px; background-color: #FF0000; border-color: #FF0000; " onclick="window.location.href='/book-appointment/clinic'">Back</button>

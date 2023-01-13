@@ -19,7 +19,7 @@ exports.insert_user = async function(email) {
         user_email: email,
     }
     const newUser = await model.user.create(userModel)
-    return userModel.user_ID
+    return userModel
 }
 
 
@@ -42,23 +42,23 @@ exports.insertPatient = async function(patientParams) {
 
 
 
-exports.InsertDoctor = async function(Doctor) {
+exports.InsertDoctor = async function(Doctor, HMO_ID) {
     const doctorModel = {
         doctor_ID: "MCM-" + uuid.v4(),
         doctor_first_name: Doctor.firstName,
         doctor_last_name: Doctor.lastName,
+        doctor_email: Doctor.email,
         doctor_gender: Doctor.gender,
         doctor_contact_number: Doctor.contact_number,
         doctor_dateOfBirth: Doctor.dateOfBirth,
         doctor_room: Doctor.room,
-        doctorSpecializationSpecializationID: Doctor.specialization_ID
+        doctorSpecializationSpecializationID: Doctor.specialization_ID,
+    }
 
-    }
     const newDoctor = await model.doctor.create(doctorModel)
-    for (const HMO_ID of Doctor.HMO_IDs) {
-        const HMO = await model.HMO.findByPk(HMO_ID)
-        await HMO.addDoctor(newDoctor)
-    }
+    const HMO = await model.HMO.findByPk(HMO_ID)
+    await HMO.addDoctor(newDoctor)
+
 }
 exports.insertHmoList = async function(HMO_list) {
     const inserted = await model.HMO.bulkCreate(HMO_list)
@@ -108,7 +108,7 @@ exports.findOnePatient = async function(pk) {
 
 exports.insertAdmin = async function(adminModel) {
     admin = {
-        doctor_Secretary_ID: 'ADMIN-' + uuid.v4(),
+        doctor_Secretary_ID: 'ADMIN -' + uuid.v4(),
         doctor_Secretary_username: adminModel.username,
         doctor_Secretary_password: adminModel.password,
         doctor_Secretary_first_name: adminModel.Fname,
@@ -119,7 +119,7 @@ exports.insertAdmin = async function(adminModel) {
 
 exports.insertDoctorAvailability = async function(params) {
     const schedule_tableModel = {
-        doctor_schedule_ID: uuid.v4(),
+        doctor_schedule_ID: 'SCHED - ' + uuid.v4(),
         doctor_ID: params.doctor_ID,
         doctor_schedule_date: params.date,
         doctor_schedule_start_time: params.start,
@@ -127,4 +127,16 @@ exports.insertDoctorAvailability = async function(params) {
         doctor_schedule_max_patient: params.maxPatient,
     }
     const newSchedule = await model.doctor_schedule_table.create(schedule_tableModel)
+}
+
+exports.insertHeadManager = async function(params) {
+
+    admin = {
+        head_Manager_ID: "HA - " + uuid.v4(),
+        head_Manager_Fname: params.Fname,
+        head_Manager_Lname: params.Lname,
+        head_Manager_username: params.username,
+        head_Manager_password: params.password,
+    }
+    model.head_Manager.create(admin)
 }

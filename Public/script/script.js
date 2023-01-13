@@ -6,6 +6,7 @@ function isValidEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
+
 $(document).ready(function() {
     $.get('/setup-HMO', function(data) {
         data.forEach(result => {
@@ -141,15 +142,47 @@ $(document).ready(function() {
     $('#book').click(function() {
 
         if ($('#drop-down').val() !== "") {
-            $("#modal").modal("show");
+
             $.get("/book-appointment/get-receipt", {
                     doctor_schedule_ID: $('#drop-down').val()
                 },
                 function(data) {
-                    $('#schedule_date').children().not(':first').remove();
-                    $('#doctor_info').empty()
-                    $('#schedule_date').append(`<p style="font-size: 17px; color: #848484;">${data.date}<br>${data.start} PM</p>`)
-                    $('#doctor_info').append(` <p style="font-size: 17px; color: #848484;">Dr. ${data.doctor_first_name} ${data.doctor_last_name}<br>${data.specialization}</p>`)
+                    if (data != 'error') {
+                        $("#modal").modal("show");
+                        $('#schedule_date').children().not(':first').remove();
+                        $('#doctor_info').empty()
+                        $('#schedule_date').append(`<p style="font-size: 17px; color: #848484;">${data.date}<br>${data.start} PM</p>`)
+                        $('#doctor_info').append(` <p style="font-size: 17px; color: #848484;">Dr. ${data.doctor_first_name} ${data.doctor_last_name}<br>${data.specialization}</p>`)
+                    } else {
+                        $('#modal-container').empty()
+                        $('#modal-container').append(`<div class="modal fade" id="schedConflict" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-m modal-dialog-centered">
+                            <div class="modal-content">
+                    
+                                <div class="modal-body">
+                                    <div class="row-col sucimage center">
+                                        <img src="/assets/exit.png" alt="" class="img-fluid" style="height: 115px;">
+                                    </div>
+                                    <div class="row mt-4 suctitle text-center">
+                                        <h3>Schedule Conflict!</h3>
+                                    </div>
+                                    <div class="row mt-2 text-center">
+                                        <p class="para">You have an existing appointment that has the same schedule!.
+                                            <SEct></SEct>
+                                        </p>
+                                    </div>
+                                    <div class="row center">
+                                        <button type="button" class="btn btn-success" style="border-radius:20px; ;width: 110px;background:  #32ba7c;border: #32ba7c;" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                    
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                        $('#schedConflict').modal('show')
+                    }
+
                 })
         } else {
             console.log('no sched')

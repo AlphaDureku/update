@@ -19,6 +19,12 @@ const Head_Manager = sequelize.define('head_Manager', {
         type: DataTypes.STRING(50),
         primaryKey: true,
     },
+    head_Manager_Fname: {
+        type: DataTypes.STRING
+    },
+    head_Manager_Lname: {
+        type: DataTypes.STRING
+    },
     head_Manager_username: {
         type: DataTypes.STRING
     },
@@ -82,6 +88,9 @@ const Doctor = sequelize.define('doctor', {
     doctor_ID: {
         type: DataTypes.STRING(50),
         primaryKey: true,
+    },
+    doctor_email: {
+        type: DataTypes.STRING
     },
     doctor_first_name: {
         type: DataTypes.STRING
@@ -288,7 +297,5 @@ async function setDoctor_Department(doctorModel) {
 }
 setDoctor_Department(doctorModel)
 */
-
-
 
 module.exports = sequelize.models

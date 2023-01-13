@@ -262,6 +262,7 @@
                 dateFormat: 'mm/dd/yyyy',
                 minDate: new Date(),
                 onSelect: function(date) {
+                    console.log(date)
                     $('#inputDate').val(date)
                 },
                 onRenderCell: function onRenderCell(date, cellType) {

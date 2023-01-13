@@ -2,7 +2,6 @@ const model = require('../sequelize_sequelizeModel')
 const uuid = require('uuid')
 const Sequelize = require('sequelize')
 const moment = require('moment');
-const e = require('express');
 
 
 const age = Sequelize.fn(
@@ -20,6 +19,7 @@ const patient_age = Sequelize.fn(
 );
 
 exports.getOneDoctor = async function(doctor_ID) {
+    const oneDayFromNow = Sequelize.literal('CURRENT_DATE + INTERVAL 1 DAY');
     return await model.doctor.findAll({
         raw: true,
         attributes: [
@@ -34,13 +34,21 @@ exports.getOneDoctor = async function(doctor_ID) {
             required: true,
             attributes: [],
             where: {
-                doctor_schedule_status: 'Available'
-            }
+                [Sequelize.Op.and]: [{
+                    doctor_schedule_status: 'available'
+                }, {
+                    doctor_schedule_date: {
+                        [Sequelize.Op.ne]: oneDayFromNow
+                    }
+                }]
 
+            }
         }],
         where: { doctor_ID: doctor_ID }
     })
 }
+
+
 exports.getOneDoctor2 = async function(doctor_ID) {
     return await model.doctor.findAll({
         raw: true,
@@ -618,6 +626,105 @@ exports.fetchDoctorPatientAppointmentsWithName = async function(doctor_ID, start
         }
     })
 }
+
+exports.fetchDoctorPatientAppointmentsThatDate = async function(doctor_ID, day) {
+    return await model.appointmentDetails.findAll({
+        raw: true,
+        attributes: [
+            'appointment_ID',
+            'patient_ID', [Sequelize.col('patient_first_name'), 'patient_Fname'],
+            [Sequelize.col('patient_last_name'), 'patient_Lname'],
+            [Sequelize.col('patient_contact_number'), 'contact'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%m/%d/%Y'), 'appointmentDate'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'end'],
+        ],
+        include: [{
+            model: model.doctor,
+            attributes: [],
+            include: [{
+                model: model.doctor_specialization,
+                attributes: [],
+            }]
+
+        }, {
+            model: model.patient,
+            attributes: [],
+            include: [{
+                model: model.user,
+                attributes: [],
+            }],
+        }, {
+            model: model.doctor_schedule_table,
+            attributes: [],
+            where: {
+                doctor_schedule_date: day
+            },
+
+        }],
+        where: {
+            doctor_ID: doctor_ID,
+            appointment_status: 'Confirmed'
+
+        }
+    })
+}
+exports.getOneDoctor3 = async function(doctor_ID) {
+    return await model.doctor.findAll({
+        raw: true,
+        attributes: [
+            'doctor_first_name', 'doctor_last_name', [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%b %e, %Y'), 'date'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%Y-%m-%d'), 'date2'],
+            [Sequelize.col('doctor_schedule_start_time'), 'start'],
+            [Sequelize.col('doctor_schedule_end_time'), 'end'],
+        ],
+        include: [{
+            model: model.doctor_schedule_table,
+            required: true,
+            attributes: [],
+
+
+        }],
+        where: { doctor_ID: doctor_ID }
+    })
+}
+exports.getDoctorContact = async function(ID) {
+    return await model.doctor.findOne({
+        raw: true,
+        attributes: [
+            ['doctor_email', 'email'], 'doctor_last_name'
+        ],
+        where: {
+            doctor_ID: ID
+        }
+    })
+}
+
+exports.checkIfConflict = async function(patient_ID, date) {
+    return await model.appointmentDetails.findAll({
+        raw: true,
+        where: {
+            [Sequelize.Op.and]: [{ patient_ID: patient_ID },
+                {
+                    [Sequelize.Op.or]: [{ appointment_status: 'Confirmed' }, { appointment_status: 'Pending' }]
+                }
+            ]
+        },
+        include: [{
+            model: model.doctor_schedule_table,
+            where: {
+                doctor_schedule_date: date
+            }
+        }]
+    })
+}
+
+
+
+
+
+
+
 
 /*
 exports.selectDoctorAndSched = async function(doctor_ID) {

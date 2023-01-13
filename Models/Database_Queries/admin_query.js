@@ -48,7 +48,7 @@ exports.updateAppointment = async function(params) {
 }
 
 exports.getContactUsingApp_ID = async function(ID) {
-    return await model.appointmentDetails.findAll({
+    return await model.appointmentDetails.findOne({
         raw: true,
         attributes: [
             [Sequelize.col('patient_contact_number'), 'contact']
@@ -82,5 +82,35 @@ exports.updatePassword = async function(params) {
         where: {
             doctor_Secretary_ID: params.doctor_Secretary_ID
         }
+    })
+}
+
+exports.getAppointmentsToday = async function(ID, date) {
+    return await model.appointmentDetails.findAll({
+        raw: true,
+        attributes: [
+            [Sequelize.col('patient_first_name'), 'Fname'],
+            [Sequelize.col('patient_last_name'), 'Lname'],
+            [Sequelize.col('patient_contact_number'), 'contact'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_date'), '%M %e, %Y'), 'appointmentDate'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'start'],
+            [Sequelize.fn('date_format', Sequelize.col('doctor_schedule_start_time'), '%h:%i%p'), 'end'],
+        ],
+
+        include: [{
+            model: model.patient,
+            attributes: []
+        }, {
+            model: model.doctor_schedule_table,
+            attributes: [],
+            where: {
+                doctor_schedule_date: date
+            }
+        }],
+        where: [{
+            doctor_ID: ID,
+            appointment_status: 'Confirmed'
+        }]
+
     })
 }

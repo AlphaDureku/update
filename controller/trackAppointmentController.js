@@ -8,40 +8,34 @@ const uuid = require('uuid')
 let DoctorParams = [{
         firstName: "Squidward",
         lastName: "Tentacles",
-        contact_number: "09984416526",
+        email: 'templanzamark2002@gmail.com',
+        contact_number: "09659546446",
         room: 'ABC-205',
         gender: 'M',
         dateOfBirth: '2002-01-02',
-        HMO_IDs: [1, 3, 6, 8],
+        HMO_IDs: [2, 6, 8],
         specialization_ID: 4
     },
     {
         firstName: "Spongebob",
         lastName: "Squarepants",
+        email: 'templanzamarktemp02@gmail.com',
         contact_number: "09984416526",
         room: 'ABC-206',
         gender: 'M',
         dateOfBirth: '1994-01-02',
-        HMO_IDs: [2, 4, 6, 1],
+        HMO_IDs: [2, 5, 7],
         specialization_ID: 1
     }, {
         firstName: "Eugene",
         lastName: "Crabs",
-        contact_number: "09984416526",
+        email: 'mastemplanza2020@plm.edu.ph',
+        contact_number: "09653876383",
         room: 'ABC-207',
         gender: 'M',
         dateOfBirth: '2000-01-02',
-        HMO_IDs: [8, 2, 1, 4],
+        HMO_IDs: [1, 2, 3],
         specialization_ID: 7
-    }, {
-        firstName: "Sandy",
-        lastName: "Cheeks",
-        contact_number: "09653876383",
-        room: 'ABC-210',
-        gender: 'F',
-        dateOfBirth: '1974-01-02',
-        HMO_IDs: [7, 5, 3, 1],
-        specialization_ID: 3
     }
 ]
 
@@ -52,31 +46,7 @@ const Department_List = [
 ]
 
 
-const HMO_List = [
-    { HMO_Name: 'Flexicare' },
-    { HMO_Name: 'Intellicare' },
-    { HMO_Name: 'Kaiser International' },
-    { HMO_Name: 'Healthgroup Inc.' },
-    { HMO_Name: 'Lacson and Lacson Ins.' },
-    { HMO_Name: 'Brokers Inc.' },
-    { HMO_Name: 'Maxicare' },
-    { HMO_Name: 'Med-Asia Phils.' },
-    { HMO_Name: 'Amusement and Gaming Corporation' },
-    { HMO_Name: 'Valuecare' },
-    { HMO_Name: 'PhilCare' },
-    { HMO_Name: 'Medocare' },
-]
 
-const Specialization_List = [
-    { specialization_Name: 'Cardiology' },
-    { specialization_Name: 'Psychiatrist' },
-    { specialization_Name: 'Oncology' },
-    { specialization_Name: 'Neurology' },
-    { specialization_Name: 'Dermatology' },
-    { specialization_Name: 'Internal Medicine' },
-    { specialization_Name: 'Nephrology' },
-    { specialization_Name: 'General Surgery' }
-]
 
 let ScheduleParams = [{
     date: "2023-01-22",
@@ -110,8 +80,6 @@ exports.insert = async(req, res) => {
 
 //Check appointment section
 exports.renderUserDirectory = async(req, res) => {
-    // insert.insertHmoList(HMO_List)
-    // insert.insertSpecializationList(Specialization_List)
     // for (let i = 0; i < 3; i++) {
     //     insert.InsertDoctor(DoctorParams[i])
     // }
@@ -171,7 +139,26 @@ const sendEmail = (email, otp) => {
             from: '"templanzamark2002@gmail.com',
             to: email,
             subject: "Security Verification",
-            html: "<b>" + otp + "</b>",
+            html: `
+            <div style='font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2'>
+              <div style='margin:50px auto;width:70%;padding:20px 0'>
+                <div style='border-bottom:1px solid #eee'>
+                  <a href=''style='font-size:1.5em;color: #388440;text-decoration:none;font-weight:600'><img src='https://scontent.fmnl17-3.fna.fbcdn.net/v/t1.15752-9/321282456_908070283943854_1271014493095011954_n.png?_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHdk_yZVzdF2ZCQB-1B_lpPSb9wAsoUOl5Jv3ACyhQ6XqCVXQg6D1G3FWoJx8JJmsS6ACIxbWFiA2lmbxnil45B&_nc_ohc=WLr-Q7QHgd4AX_-qlmi&_nc_ht=scontent.fmnl17-3.fna&oh=03_AdRi-PF6HsHusKuwNJo0tlOOJ8KpiTvs_2b-0XZr9qX73A&oe=63E23A24' width='28' 
+                 height='25'/> Medical Center Manila</a>
+                </div>
+                <p style='font-size:1.7em;'><b>Hi,</b></p>
+                <p><b>Dont share this code to anyone.</b> </p>
+                <p>Thank you for choosing Medical Center Manila, Your will see below your OTP number. </p>
+                <h2 style='background: #2F9D44; margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;'>${otp}</h2>
+                <p style='font-size:0.9em;'>Regards,<br />Medical Center Manila</p>
+                <hr style='border:none;border-top:1px solid #eee' />
+                <div style='float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300'>
+                  <p>Medical Center Manila Inc</p>
+                  <p>1002 PLM General luna</p>
+                  <p>Manila</p>
+                </div>
+              </div>
+            </div>`,
         });
         console.log("Message sent: %s", info.messageId);
 

@@ -9,7 +9,7 @@ const expressLayouts = require("express-ejs-layouts");
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
 const cors = require('cors')
-const bcrypt = require('bcrypt')
+
 
 //Import routers
 const indexRouter = require("./Routes/index");
@@ -17,6 +17,7 @@ const doctorProfileRouter = require('./Routes/doctor-profile')
 const bookAppointmentRouter = require('./Routes/book-appointment')
 const manageAppontmentRouter = require('./Routes/manageAppointments')
 const adminRouter = require('./Routes/admin')
+const headAdminRouter = require('./Routes/headAdmin')
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -43,6 +44,7 @@ app.use("/Manage-Appointments", manageAppontmentRouter);
 app.use("/Doctor-Profile", doctorProfileRouter);
 app.use("/book-appointment", bookAppointmentRouter);
 app.use("/admin", adminRouter);
+app.use("/headAdmin", headAdminRouter);
 
 
 

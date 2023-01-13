@@ -16,7 +16,7 @@ const renderCalendar = (enabledDays) => {
     $('.datepicker-here').datepicker({
         dateFormat: 'yyyy/mm/dd',
         onSelect() {
-            $.get("/book-appointment/get-schedule2", function(data, status) {
+            $.get("/book-appointment/get-schedule2", { data: 'hi' }, function(data, status) {
                 $('#table').empty().not(':first').remove();
                 $('#patientQueue').remove()
                 $('#drop-down').children().not(':first').remove();

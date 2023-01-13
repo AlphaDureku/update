@@ -1,20 +1,5 @@
 <% if(locals.appointments!= null){%>
-    <div class="container mt-3  " id="manageselectedapplist">
-        <%appointments.forEach(data=>{%>
-            <%if(data.status == 'Confirmed'){%>
-                <div class="container acccard mt-2 mb-2" data-bs-target="#<%=data.appointment_ID%>" data-bs-toggle="modal">
-                    <div class="row">
-                        <div class="col">
-                            <label class="secpatientname "><%=data.patient_Fname%> <%=data.patient_Lname%></label>
-                        </div>
-                        <div class="col">
-                            <label class="secappdate center"><%=data.appointmentDate%></label>
-                        </div>
-                    </div>
-                </div>
-                <%}%>
-                    <%})%>
-    </div>
+
     <%appointments.forEach(data=>{%>
         <!--Appointment Modals-->
         <div class="modal fade modal-lg " tabindex="-1" id="<%=data.appointment_ID%>" style="box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);">

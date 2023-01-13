@@ -9,7 +9,7 @@
             </div>
 
             <div class="col me-4">
-                <select onchange="this.form.submit()" class="form-select float-end mt-4 " aria-label="Default select example" id="outdoctorfilter" name="doctor_ID">
+                <select onchange="this.form.submit()" class="form-select float-end mt-4 " aria-label="Default select example" id="outdoctorfilter" name="doctor_ID" id="doctor_ID">
                 <%doctors.forEach(data=>{%>
                     <option value="<%=data.doctor_ID%>">Dr. <%=data.doctor_first_name%> <%=data.doctor_last_name%></option>
                 <%})%>
@@ -37,7 +37,7 @@
         </div>
         <div class="row ">
             <div class="center">
-                <div class="datepicker-here"></div>
+                <input id="date" type='hidden' class='datepicker-here' data-language='en' readonly style="text-align: center;" name="scheduleDay" />
             </div>
         </div>
 
@@ -50,7 +50,7 @@
             <div class="row">
                 <div class="form-check  center mt-3 ">
                     <input type="button" id="arqs" />
-                    <label class="btn sendnotif center" for="arqs">
+                    <label class="btn sendnotif center" for="arqs" id="notifyDoctor">
                       NOTIFY DOCTOR
                     </label>
                 </div>
@@ -70,6 +70,9 @@
     <div class="row">
         <div class=" container  manageapplist mt-4 flex-column">
             <!--ACCEPTED LIST-->
+            <div class="container mt-3  " id="manageSelectedAppList">
+
+            </div>
             <%-include('../partials/manageAppointmentList')%>
         </div>
 
@@ -84,7 +87,7 @@
                 <div class="row">
                     <div class="form-check  center mt-3 ">
                         <input type="button" id="arqs" />
-                        <label class="btn sendnotif center" for="arqs">
+                        <label class="btn sendnotif center" for="arqs" id="notifyPatient">
                       NOTIFY PATIENTS
                     </label>
                     </div>
@@ -114,7 +117,7 @@
         </div>
     </div>
 </div>
-
+<div id="modal-container"></div>
 <script>
     $('#outdoctorfilter').val('<%=doctor_IDselect%>')
     $(function() {
@@ -132,14 +135,32 @@
         renderCalendar(enabledDays);
     });
 
-    const renderCalendar = (enabledDays) => {
 
+    const renderCalendar = (enabledDays) => {
         $(function() {
             $('.datepicker-here').datepicker({
                 dateFormat: 'mm/dd/yyyy',
                 minDate: new Date(),
                 onSelect: function(date) {
-                    $('#inputDate').val(date)
+                    $.get('get-appointment-list', {
+                        date: $('input[name="scheduleDay"]').val(),
+                    }, function(res, status) {
+                        $('#manageSelectedAppList').empty()
+                        res.forEach(data => {
+
+                            $('#manageSelectedAppList').append(`
+                        <div class="container acccard mt-2 mb-2" data-bs-target="#${data.appointment_ID}" data-bs-toggle="modal">
+                    <div class="row">
+                        <div class="col">
+                            <label class="secpatientname ">${data.patient_Fname} ${data.patient_Lname}</label>
+                        </div>
+                        <div class="col">
+                            <label class="secappdate center">${data.appointmentDate}</label>
+                        </div>
+                    </div>
+                </div>`)
+                        })
+                    })
                 },
                 onRenderCell: function onRenderCell(date, cellType) {
                     if (cellType == 'day') {
@@ -154,4 +175,133 @@
         });
 
     }
+
+    $("#notifyPatient").click(function() {
+        $.post('notify-patient', {
+            date: $('input[name="scheduleDay"]').val(),
+        }, function(res) {
+            if (res == 'error') {
+                $('#modal-container').empty()
+                $('#modal-container').append(`<div class="modal fade" id="successmodalpatient" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row-col sucimage center">
+                    <img src="/assets/exit.png" alt="" class="img-fluid" style="height: 115px;">
+                </div>
+                <div class="row mt-4 suctitle text-center">
+                    <h3>Something went wrong!</h3>
+                </div>
+                <div class="row mt-2 text-center">
+                    <p class="para">No date selected or No patient is scheduled for selected date.
+                        <SEct></SEct>
+                    </p>
+                </div>
+                <div class="row center">
+                    <button type="button" class="btn btn-success" style="border-radius:20px; ;width: 110px;background:  #32ba7c;border: #32ba7c;" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+`)
+                $('#successmodalpatient').modal('show')
+            } else {
+                $('#modal-container').empty()
+                $('#modal-container').append(`<div class="modal fade" id="successmodalpatient" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row-col sucimage center">
+                    <img src="/assets/exit.png" alt="" class="img-fluid" style="height: 115px;">
+                </div>
+                <div class="row mt-4 suctitle text-center">
+                    <h3>Success!</h3>
+                </div>
+                <div class="row mt-2 text-center">
+                    <p class="para">Successfully notified patients!
+                        <SEct></SEct>
+                    </p>
+                </div>
+                <div class="row center">
+                    <button type="button" class="btn btn-success" style="border-radius:20px; ;width: 110px;background:  #32ba7c;border: #32ba7c;" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+`)
+                $('#successmodalpatient').modal('show')
+            }
+        })
+    });
+
+    $("#notifyDoctor").click(function() {
+        $.post('notify-doctor', {
+            doctor_ID: '<%=doctor_IDselect%>',
+            date: $('input[name="scheduleDay"]').val(),
+        }, function(res) {
+            if (res == 'error') {
+                $('#modal-container').empty()
+                $('#modal-container').append(`<div class="modal fade" id="successmodaldoctor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row-col sucimage center">
+                    <img src="/assets/exit.png" alt="" class="img-fluid" style="height: 115px;">
+                </div>
+                <div class="row mt-4 suctitle text-center">
+                    <h3>Something went wrong!</h3>
+                </div>
+                <div class="row mt-2 text-center">
+                    <p class="para">Please select a date from the calendar.
+                        <SEct></SEct>
+                    </p>
+                </div>
+                <div class="row center">
+                    <button type="button" class="btn btn-success" style="border-radius:20px; ;width: 110px;background:  #32ba7c;border: #32ba7c;" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+`)
+                $('#successmodaldoctor').modal('show')
+            } else {
+                $('#modal-container').empty()
+                $('#modal-container').append(`<div class="modal fade" id="successmodaldoctor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row-col sucimage center">
+                    <img src="/assets/checked.png" alt="" class="img-fluid" style="height: 115px;">
+                </div>
+                <div class="row mt-4 suctitle text-center">
+                    <h3>Select a date!</h3>
+                </div>
+                <div class="row mt-2 text-center">
+                    <p class="para">Successfully notified doctor!
+                        <SEct></SEct>
+                    </p>
+                </div>
+                <div class="row center">
+                    <button type="button" class="btn btn-success" style="border-radius:20px; ;width: 110px;background:  #32ba7c;border: #32ba7c;" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+`)
+                $('#successmodaldoctor').modal('show')
+            }
+        })
+    });
 </script>
