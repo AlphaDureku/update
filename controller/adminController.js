@@ -10,7 +10,7 @@ const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
 exports.test = async(req, res) => {
 
-    res.render('Secretary/login', { layout: 'layouts/secretary_layout' })
+    res.render('Secretary/Login', { layout: 'layouts/secretary_layout' })
 }
 
 
